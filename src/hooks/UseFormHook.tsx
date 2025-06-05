@@ -1,0 +1,74 @@
+import React, {useState} from "react";
+
+type Errors<T> = Partial<Record<keyof T, string>>;
+type DisabledFields<T> = Partial<Record<keyof T, boolean>>;
+
+interface UseFormProps<T> {
+    initialValues: T;
+    validate?: (values: T) => Errors<T>;
+    onSubmit: (values: T) => void;
+}
+
+export interface UseFormReturn<T> {
+    values: T;
+    errors: Partial<Record<keyof T, string>>;
+    updateField: <K extends keyof T>(key: K, value: T[K]) => void;
+    handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+    resetForm: () => void;
+    disableField: (field: keyof T) => void;
+    enableField: (field: keyof T) => void;
+    disabledFields: DisabledFields<T>;
+    isSubmitted: boolean;
+}
+
+export function useForm<T extends Record<string, any>>({initialValues, validate, onSubmit}: UseFormProps<T>):UseFormReturn<T> {
+    const [values, setValues] = useState<T>(initialValues);
+    const [errors, setErrors] = useState<Errors<T>>({});
+    const [disabledFields, setDisabledFields] = useState<DisabledFields<T>>({});
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const updateField = <K extends keyof T>(field: K, value: T[K]) => {
+        setValues((prev) => ({...prev, [field]: value}));
+        if (validate) {
+            const newErrors = validate({...values, [field]: value});
+            setErrors(newErrors);
+        }
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const validationErrors = validate ? validate(values) : {};
+        setErrors(validationErrors);
+        if (Object.keys(validationErrors).length === 0) {
+            onSubmit(values);
+            setIsSubmitted(true);
+        }
+    };
+
+    const resetForm = () => {
+        setValues(initialValues);
+        setErrors({});
+        setDisabledFields({});
+        setIsSubmitted(false);
+    };
+
+    const disableField = (field: keyof T) => {
+        setDisabledFields((prev) => ({...prev, [field]: true}));
+    };
+
+    const enableField = (field: keyof T) => {
+        setDisabledFields((prev) => ({...prev, [field]: false}));
+    };
+
+    return {
+        values,
+        errors,
+        updateField,
+        handleSubmit,
+        resetForm,
+        disableField,
+        enableField,
+        disabledFields,
+        isSubmitted
+    };
+}
