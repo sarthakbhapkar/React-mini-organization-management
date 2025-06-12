@@ -1,47 +1,46 @@
-import { useFormContext } from "../context/FormContext";
-import React from "react";
+import React, {useState} from 'react';
+import { useFormContext } from '../context/FormContext';
 
-type FieldProps<TFormData, TKey extends keyof TFormData> = {
-    name: TKey;
-    label?: string;
-    required?: boolean;
-    render: (props: {
-        name: string;
-        value: TFormData[TKey];
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    }) => React.ReactElement;
+type Validator<T> = (value: T) => string | null;
+
+type FieldRenderProps<T> = {
+    name: string;
+    value: T;
+    onChange: (val: T) => void;
 };
 
-export function Field<T, K extends keyof T>({
-                                                name,
-                                                label,
-                                                required = false,
-                                                render,
-                                            }: FieldProps<T, K>) {
-    const form = useFormContext<T>();
+interface FieldProps<T> {
+    name: string;
+    label: string;
+    validators?: Validator<T>[];
+    render: (props: FieldRenderProps<T>) => React.ReactNode;
+}
+
+export function Field<T>({ name, label, validators = [], render }: FieldProps<T>) {
+    const form = useFormContext<any>();
     const value = form.values[name];
     const error = form.errors[name];
+    const [touched, setTouched] = useState(false);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const inputValue = (e.target.type === "checkbox"
-            ? e.target.checked
-            : e.target.value) as T[K];
-        form.updateField(name, inputValue);
+    const onChange = (val: T) => {
+        form.updateField(name, val);
+        setTouched(true);
     };
 
+    const validationError = touched
+            ? validators.map(v => v(value)).find(Boolean)
+            : undefined;
+
+    const finalError = error || validationError;
+
     return (
-        <div style={{ marginBottom: "1rem" }}>
-            <label htmlFor={String(name)}>
-                {label} {required && <span style={{ color: "red" }}>*</span>}
+        <div style={{ marginBottom: '1rem' }}>
+            <label>
+                <div>{label}</div>
+                {render({ name, value, onChange })}
             </label>
-
-            {render({
-                name: String(name),
-                value,
-                onChange: handleChange,
-            })}
-
-            {error && <span style={{ color: "red", fontSize: "0.9rem" }}>{error}</span>}
+            {finalError && <div style={{ color: 'red' }}>{finalError}</div>}
         </div>
     );
 }
+

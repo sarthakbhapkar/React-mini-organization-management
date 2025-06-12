@@ -1,62 +1,97 @@
-import { useForm } from "../hooks/UseFormHook";
-import { Form } from "./Form.tsx";
-import { Field } from "./Field.tsx";
+import React from 'react';
+import { createSelectField, NumberField, StringField } from '../fields';
+import { useForm } from '../hooks/UseFormHook';
+
+import {
+    emailFormat,
+    maxLength,
+    numberRange,
+    required,
+} from '../utils/validations';
+import {FormProvider} from '../context/FormContext';
 
 type SampleFormData = {
     name: string;
     email: string;
+    age: number;
+    gender: 'male' | 'female' | 'other';
 };
 
-export default function SampleForm() {
+const GenderField = createSelectField<'male' | 'female' | 'other'>();
+
+const SampleForm: React.FC = () => {
+
     const form = useForm<SampleFormData>({
-        initialValues: { name: "", email: "" },
-        validate: (values) => {
-            const errors: Partial<Record<keyof SampleFormData, string>> = {};
-            if (!values.name) errors.name = "Name is required";
-            if (!values.email.includes("@")) errors.email = "Email is invalid";
-            return errors;
+        initialValues: {
+            name: '',
+            email: '',
+            age: 0,
+            gender: 'male',
         },
-        onSubmit: (values) => {
-            alert(`Submitted: ${JSON.stringify(values)}`);
-        },
+        validate: validateAll
     });
 
+    function validateAll(): Partial<Record<keyof SampleFormData, string>> {
+        const errors: Partial<Record<keyof SampleFormData, string>> = {};
+
+        const nameErrors = form.validateField('name', [required(), maxLength(20)]);
+        if (nameErrors.length > 0) {
+            errors.name = nameErrors[0];
+        }
+
+        const emailErrors = form.validateField('email', [required(), emailFormat()]);
+        if (emailErrors.length > 0) {
+            errors.email = emailErrors[0];
+        }
+
+        const ageErrors = form.validateField('age', [required(), numberRange(18, 99)]);
+        if (ageErrors.length > 0) {
+            errors.age = ageErrors[0];
+        }
+
+        const genderErrors = form.validateField('gender', [required()]);
+        if (genderErrors.length > 0) {
+            errors.gender = genderErrors[0];
+        }
+        return errors;
+    }
+
     return (
-        <Form form={form}>
-            <Field<SampleFormData, "name">
-                name="name"
-                label="Name"
-                required
-                render={({ name, value, onChange }) => (
-                    <input
-                        id={name}
-                        name={name}
-                        type="text"
-                        value={value as string}
-                        onChange={onChange}
-                        disabled={form.isSubmitted}
-                        style={{ display: "block", width: "100%", padding: "0.5rem" }}
-                    />
-                )}
-            />
-
-            <Field<SampleFormData, "email">
-                name="email"
-                label="Email"
-                required
-                render={({ name, value, onChange }) => (
-                    <input
-                        id={name}
-                        name={name}
-                        type="email"
-                        value={value as string}
-                        onChange={onChange}
-                        disabled={form.isSubmitted}
-                        style={{ display: "block", width: "100%", padding: "0.5rem" }}
-                    />
-                )}
-            />
-        </Form>
-
+        <FormProvider value={form}>
+            <form onSubmit={form.handleSubmit}
+                style={{ maxWidth: '400px', margin: '2rem auto' }}>
+                <StringField
+                    name="name"
+                    label="Name"
+                    required
+                    maxLength={20}
+                    onChange={(val) => console.log('External change:', val)}
+                />
+                <StringField
+                    name="email"
+                    label="Email"
+                    required
+                    emailFormat
+                />
+                <NumberField
+                    name="age"
+                    label="Age"
+                    required
+                    numberRange={[18, 99]}
+                />
+                <GenderField
+                    name="gender"
+                    label="Gender"
+                    required
+                    options={['male', 'female', 'other']}
+                />
+                <button type="submit">
+                    Submit
+                </button>
+            </form>
+        </FormProvider>
     );
-}
+};
+
+export default SampleForm;
+

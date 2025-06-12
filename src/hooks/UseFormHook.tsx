@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import type {Validator} from "../utils/validations.ts";
 
 type Errors<T> = Partial<Record<keyof T, string>>;
 type DisabledFields<T> = Partial<Record<keyof T, boolean>>;
@@ -6,7 +7,7 @@ type DisabledFields<T> = Partial<Record<keyof T, boolean>>;
 interface UseFormProps<T> {
     initialValues: T;
     validate?: (values: T) => Errors<T>;
-    onSubmit: (values: T) => void;
+    onSubmit?: (values: T) => void;
 }
 
 export interface UseFormReturn<T> {
@@ -19,6 +20,7 @@ export interface UseFormReturn<T> {
     enableField: (field: keyof T) => void;
     disabledFields: DisabledFields<T>;
     isSubmitted: boolean;
+    validateField: <K extends keyof T>(key: K, validators: Validator<T[K]>[]) => string[];
 }
 
 export function useForm<T extends Record<string, any>>({initialValues, validate, onSubmit}: UseFormProps<T>):UseFormReturn<T> {
@@ -40,8 +42,13 @@ export function useForm<T extends Record<string, any>>({initialValues, validate,
         const validationErrors = validate ? validate(values) : {};
         setErrors(validationErrors);
         if (Object.keys(validationErrors).length === 0) {
-            onSubmit(values);
+            alert(`Form submitted with values: ${JSON.stringify(values, null, 2)}`);
+            if (onSubmit) {
+                onSubmit(values);
+            }
             setIsSubmitted(true);
+        }else {
+            alert("Please fix form errors before submitting.");
         }
     };
 
@@ -50,6 +57,19 @@ export function useForm<T extends Record<string, any>>({initialValues, validate,
         setErrors({});
         setDisabledFields({});
         setIsSubmitted(false);
+    };
+
+    const validateField = <K extends keyof T>(key: K, validators: Validator<T[K]>[]): string[] => {
+        const value = values[key];
+        const fieldErrors: string[] = [];
+
+        for (const validator of validators) {
+            const error = validator(value);
+            if (error) fieldErrors.push(error);
+        }
+
+        setErrors(prev => ({ ...prev, [key]: fieldErrors[0] }));
+        return fieldErrors;
     };
 
     const disableField = (field: keyof T) => {
@@ -69,6 +89,7 @@ export function useForm<T extends Record<string, any>>({initialValues, validate,
         disableField,
         enableField,
         disabledFields,
-        isSubmitted
+        isSubmitted,
+        validateField
     };
 }
