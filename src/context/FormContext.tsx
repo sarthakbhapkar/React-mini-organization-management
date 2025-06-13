@@ -4,10 +4,9 @@ import type {UseFormReturn} from "../hooks/UseFormHook";
 export const FormContext = createContext<UseFormReturn<any> | null>(null);
 
 export function useFormContext<T>():UseFormReturn<T> {
-    if (!FormContext) {
-        throw new Error("useFormContext must be used within a FormProvider");
-    }
     const context = useContext(FormContext);
+    if(!context)
+        throw new Error("useFormContext must be used within a FormProvider");
     return context as UseFormReturn<T>;
 }
 

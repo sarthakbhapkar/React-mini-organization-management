@@ -1,5 +1,6 @@
 import React, {useState} from "react";
 import type {Validator} from "../utils/validations.ts";
+import {setValue} from "../utils/path.ts";
 
 type Errors<T> = Partial<Record<keyof T, string>>;
 type DisabledFields<T> = Partial<Record<keyof T, boolean>>;
@@ -13,7 +14,7 @@ interface UseFormProps<T> {
 export interface UseFormReturn<T> {
     values: T;
     errors: Partial<Record<keyof T, string>>;
-    updateField: <K extends keyof T>(key: K, value: T[K]) => void;
+    updateField: (path: string, value: any) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     resetForm: () => void;
     disableField: (field: keyof T) => void;
@@ -21,6 +22,7 @@ export interface UseFormReturn<T> {
     disabledFields: DisabledFields<T>;
     isSubmitted: boolean;
     validateField: <K extends keyof T>(key: K, validators: Validator<T[K]>[]) => string[];
+    setValues: (vals: T) => void;
 }
 
 export function useForm<T extends Record<string, any>>({initialValues, validate, onSubmit}: UseFormProps<T>):UseFormReturn<T> {
@@ -29,10 +31,15 @@ export function useForm<T extends Record<string, any>>({initialValues, validate,
     const [disabledFields, setDisabledFields] = useState<DisabledFields<T>>({});
     const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const updateField = <K extends keyof T>(field: K, value: T[K]) => {
-        setValues((prev) => ({...prev, [field]: value}));
+    const updateField = (path: string, value: any) => {
+        setValues(prev => {
+            const updated = { ...prev };
+            setValue(updated, path, value);
+            return updated;
+        });
+
         if (validate) {
-            const newErrors = validate({...values, [field]: value});
+            const newErrors = validate({ ...values });
             setErrors(newErrors);
         }
     };
@@ -90,6 +97,7 @@ export function useForm<T extends Record<string, any>>({initialValues, validate,
         enableField,
         disabledFields,
         isSubmitted,
-        validateField
+        validateField,
+        setValues
     };
 }

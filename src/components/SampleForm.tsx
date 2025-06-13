@@ -1,5 +1,4 @@
 import React from 'react';
-import { createSelectField, NumberField, StringField } from '../fields';
 import { useForm } from '../hooks/UseFormHook';
 
 import {
@@ -9,15 +8,19 @@ import {
     required,
 } from '../utils/validations';
 import {FormProvider} from '../context/FormContext';
+import {InnerForm} from "./InnerForm.tsx";
 
 type SampleFormData = {
     name: string;
     email: string;
     age: number;
     gender: 'male' | 'female' | 'other';
+    address: {
+        street: string;
+        city: string;
+    };
+    hobbies: { title: string }[];
 };
-
-const GenderField = createSelectField<'male' | 'female' | 'other'>();
 
 const SampleForm: React.FC = () => {
 
@@ -27,6 +30,11 @@ const SampleForm: React.FC = () => {
             email: '',
             age: 0,
             gender: 'male',
+            address: {
+                street: '',
+                city: '',
+            },
+            hobbies: [{ title: '' }],
         },
         validate: validateAll
     });
@@ -58,37 +66,7 @@ const SampleForm: React.FC = () => {
 
     return (
         <FormProvider value={form}>
-            <form onSubmit={form.handleSubmit}
-                style={{ maxWidth: '400px', margin: '2rem auto' }}>
-                <StringField
-                    name="name"
-                    label="Name"
-                    required
-                    maxLength={20}
-                    onChange={(val) => console.log('External change:', val)}
-                />
-                <StringField
-                    name="email"
-                    label="Email"
-                    required
-                    emailFormat
-                />
-                <NumberField
-                    name="age"
-                    label="Age"
-                    required
-                    numberRange={[18, 99]}
-                />
-                <GenderField
-                    name="gender"
-                    label="Gender"
-                    required
-                    options={['male', 'female', 'other']}
-                />
-                <button type="submit">
-                    Submit
-                </button>
-            </form>
+            <InnerForm/>
         </FormProvider>
     );
 };
