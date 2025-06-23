@@ -1,4 +1,7 @@
-type ListTableProps<T> = {
+import { Table } from 'antd';
+import type { TableProps } from 'antd';
+
+type ListTableProps<T extends object> = {
     data: T[];
     loading: boolean;
     error: string | null;
@@ -6,49 +9,47 @@ type ListTableProps<T> = {
     totalPages: number;
     setPage: (page: number) => void;
     includeKeys: (keyof T)[];
+    rowKey?: keyof T;
 };
 
-export function ListTable<T>({
-                                 data,
-                                 loading,
-                                 error,
-                                 page,
-                                 totalPages,
-                                 setPage,
-                                 includeKeys,
-                             }: ListTableProps<T>) {
+export function ListTable<T extends object>({
+                                                data,
+                                                loading,
+                                                error,
+                                                page,
+                                                totalPages,
+                                                setPage,
+                                                includeKeys,
+                                                rowKey,
+                                            }: ListTableProps<T>) {
+
+    const columns: TableProps<T>['columns'] = includeKeys.map((key) => ({
+        title: String(key).toUpperCase(),
+        dataIndex: key as string,
+        key: String(key),
+    }));
+
+    const dataSource = data.map((item, index) => ({
+        ...item,
+        key: rowKey && item[rowKey] ? String(item[rowKey]) : index,
+    }));
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
     if (data.length === 0) return <p>No data available</p>;
 
     return (
-        <div>
-            <table border={1} cellPadding={5}>
-                <thead>
-                <tr>
-                    {includeKeys.map((key) => (
-                        <th>{String(key)}</th>
-                    ))}
-                </tr>
-                </thead>
-                <tbody>
-                {data.map((item, index) => (
-                    <tr key={index}>
-                        {includeKeys.map((key) => (
-                            <td>
-                                {String(item[key])}
-                            </td>
-                        ))}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-
-            <div style={{ marginTop: 10 }}>
-                <button disabled={page <= 1} onClick={() => setPage(page - 1)}>Previous</button>
-                <span style={{ margin: '0 10px' }}>Page {page} of {totalPages}</span>
-                <button disabled={page >= totalPages} onClick={() => setPage(page + 1)}>Next</button>
-            </div>
-        </div>
+        <Table<T>
+            columns={columns}
+            dataSource={dataSource}
+            pagination={{
+                current: page,
+                total: totalPages * 10,
+                pageSize: 10,
+                onChange: (page) => setPage(page),
+                showSizeChanger: false,
+            }}
+            bordered
+        />
     );
 }

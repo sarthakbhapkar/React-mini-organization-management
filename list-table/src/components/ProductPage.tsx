@@ -1,5 +1,5 @@
-import { useListTable } from '../hooks/useListTable';
-import { ListTable } from './ListTable';
+import { ListTable } from './ListTable.tsx';
+import {useProduct} from "../hooks/useProduct.ts";
 
 type Product = {
     id: number;
@@ -16,11 +16,7 @@ export default function ProductPage() {
         page,
         totalPages,
         setPage,
-    } = useListTable<Product>({
-        url: 'https://dummyjson.com/products',
-        limit: 10,
-        dataKey: 'products',
-    });
+    } = useProduct();
 
     return (
         <ListTable<Product>
@@ -31,6 +27,7 @@ export default function ProductPage() {
             totalPages={totalPages}
             setPage={setPage}
             includeKeys={['id', 'title', 'description', 'category']}
+            rowKey="id"
         />
     );
 }

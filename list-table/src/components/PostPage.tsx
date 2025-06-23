@@ -1,5 +1,5 @@
-import { useListTable } from '../hooks/useListTable';
-import { ListTable } from './ListTable';
+import { ListTable } from './ListTable.tsx';
+import {usePost} from "../hooks/usePost.ts";
 
 type Post = {
     id: number;
@@ -15,11 +15,7 @@ export default function PostPage() {
         page,
         totalPages,
         setPage,
-    } = useListTable<Post>({
-        url: 'https://dummyjson.com/posts',
-        limit: 5,
-        dataKey:'posts'
-    });
+    } = usePost();
 
     return (
         <ListTable<Post>
@@ -30,6 +26,7 @@ export default function PostPage() {
             totalPages={totalPages}
             setPage={setPage}
             includeKeys={['id', 'title', 'body']}
+            rowKey="id"
         />
     );
 }
