@@ -9,6 +9,7 @@ import Layout from '../../../pages/Layout.tsx';
 import {useLeaveApproval} from "../hooks/useLeaveApproval.ts";
 import DataTable, {type Column} from "../../DataTable.tsx";
 import type {Leave} from "../../../types";
+import LeaveNavbar from "./LeaveNavBar.tsx";
 
 const LeaveApproval: React.FC = () => {
     const {
@@ -58,7 +59,9 @@ const LeaveApproval: React.FC = () => {
     return (
         <Layout>
             <Sidebar role={user.role}/>
-            <Box sx={{width: '100%', padding: 3}}>
+            <Box sx={{ width:'100%'}}>
+                <LeaveNavbar />
+                <Box sx={{ padding: 3 }}>
                 <Typography variant="h4" gutterBottom>
                     Leave Approvals
                 </Typography>
@@ -70,6 +73,7 @@ const LeaveApproval: React.FC = () => {
                     totalPages={totalPages}
                     onPageChange={setPage}
                 />
+                </Box>
             </Box>
         </Layout>
     );

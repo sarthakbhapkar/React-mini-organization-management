@@ -2,6 +2,7 @@ import {Sidebar} from "../../../pages/Sidebar.tsx";
 import Layout from "../../../pages/Layout.tsx";
 import {Box, Card, CardContent, Grid, Typography} from "@mui/material";
 import {useLeaveBalance} from "../hooks/useLeaveBalance.ts";
+import LeaveNavbar from "./LeaveNavBar.tsx";
 
 export default function LeaveBalance() {
 
@@ -16,7 +17,9 @@ export default function LeaveBalance() {
     return (
         <Layout>
             <Sidebar role={user.role}/>
-            <Box sx={{ flexGrow: 1, p: 3 }}>
+            <Box sx={{ width:'100%'}}>
+                <LeaveNavbar />
+                <Box sx={{ padding: 3 }}>
                 <Typography variant="h4">Available Leave Balance</Typography>
             <Grid container spacing={3} sx={{ mt: 2 }}>
                 <Grid size={{xs: 12, sm: 4}}>
@@ -48,6 +51,7 @@ export default function LeaveBalance() {
                     </Card>
                 </Grid>
             </Grid>
+                </Box>
         </Box>
         </Layout>
     );

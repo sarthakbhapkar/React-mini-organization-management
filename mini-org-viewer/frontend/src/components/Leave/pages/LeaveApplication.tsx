@@ -6,6 +6,7 @@ import type {LeaveType} from "../../../types";
 import {Sidebar} from "../../../pages/Sidebar.tsx";
 import Layout from "../../../pages/Layout.tsx";
 import {useLeaveForm} from "../hooks/useLeaveForm.ts";
+import LeaveNavbar from "./LeaveNavBar.tsx";
 
 const LeaveApplication: React.FC = () => {
 
@@ -27,7 +28,8 @@ const LeaveApplication: React.FC = () => {
     return (
         <Layout>
             <Sidebar role={user.role}/>
-            <Box sx={{flexGrow: 1}}>
+            <Box sx={{width: '100%'}}>
+                <LeaveNavbar />
                 <CenteredBox>
                     <Typography variant="h4" gutterBottom>Apply for Leave</Typography>
                     {error && (

@@ -9,7 +9,7 @@ const CenteredBox: React.FC<CenteredBoxProps> = ({ children, ...rest }) => {
     return (
         <Box
             sx={{
-                minHeight: '90vh',
+                minHeight: '84vh',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

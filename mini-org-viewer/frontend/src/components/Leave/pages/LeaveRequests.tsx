@@ -10,6 +10,7 @@ import {usePagination} from "../../../hooks/usePagination.ts";
 import DataTable from '../../DataTable.tsx';
 import type { Column } from '../../DataTable.tsx';
 import type { Leave } from '../../../types';
+import LeaveNavbar from "./LeaveNavBar.tsx";
 
 const LeaveRequests: React.FC = () => {
     const { user } = useAuth();
@@ -45,7 +46,9 @@ const LeaveRequests: React.FC = () => {
     return (
         <Layout>
         <Sidebar role={user.role}/>
-        <Box sx={{ width:'100%', padding: 3 }}>
+        <Box sx={{ width:'100%'}}>
+            <LeaveNavbar />
+            <Box sx={{ padding: 3 }}>
             <Typography variant="h4" gutterBottom>
                 All Leave Requests
             </Typography>
@@ -58,6 +61,7 @@ const LeaveRequests: React.FC = () => {
                 totalPages={totalPages}
                 onPageChange={setPage}
             />
+            </Box>
         </Box>
         </Layout>
     );
