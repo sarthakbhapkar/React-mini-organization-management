@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../utils/api';
 import type { LeavePolicyType } from '../types';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.ts';
 
 export function useLeavePolicy() {
     const { token } = useAuth();

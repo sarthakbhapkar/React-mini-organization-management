@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { AuthContext } from "./AuthContext";
+import { AuthContext } from "./AuthContext.ts";
 import type {User} from "../types"
 
 const API_BASE = 'http://localhost:3000';

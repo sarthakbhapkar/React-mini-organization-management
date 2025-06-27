@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom';
-import {List, ListItem, ListItemButton, ListItemText, ListItemIcon} from '@mui/material';
+import {List, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -14,27 +14,27 @@ export const Sidebar = ({role}: { role: 'MEMBER' | 'TEAM_LEAD' | 'ADMIN' }) => (
     <List sx={{width: 240, backgroundColor: '#263238', minHeight: '90vh', color: 'white'}}>
         {(role !== 'ADMIN') && (
             <>
-                <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}} >
+                <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
                     <ListItemButton component={Link} to="/leave-apply">
-                        <ListItemIcon sx={{ minWidth: 32, color:'white' }}>
+                        <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                             <HolidayVillageIcon fontSize="small"/>
                         </ListItemIcon>
                         <ListItemText primary="Apply Leave"/>
                     </ListItemButton>
                 </ListItem>
 
-                <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}}>
+                <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
                     <ListItemButton component={Link} to="/leave-balance">
-                        <ListItemIcon sx={{ minWidth: 32,color:'white'  }}>
+                        <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                             <AccountBalanceWalletIcon fontSize="small"/>
                         </ListItemIcon>
                         <ListItemText primary="Leave Balance"/>
                     </ListItemButton>
                 </ListItem>
 
-                <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}}>
+                <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
                     <ListItemButton component={Link} to="/team-members">
-                        <ListItemIcon sx={{ minWidth: 32,color:'white'  }}>
+                        <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                             <GroupsIcon fontSize="small"/>
                         </ListItemIcon>
                         <ListItemText primary="View Team"/>
@@ -43,27 +43,27 @@ export const Sidebar = ({role}: { role: 'MEMBER' | 'TEAM_LEAD' | 'ADMIN' }) => (
             </>
         )}
 
-        <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}}>
+        <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
             <ListItemButton component={Link} to="/org-chart">
-                <ListItemIcon sx={{ minWidth: 32,color:'white'  }}>
+                <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                     <TableChartIcon fontSize="small"/>
                 </ListItemIcon>
                 <ListItemText primary="View Org Chart"/>
             </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}}>
+        <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
             <ListItemButton component={Link} to="/profile">
-                <ListItemIcon sx={{ minWidth: 32,color:'white'  }}>
+                <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                     <AccountCircleIcon fontSize="small"/>
                 </ListItemIcon>
                 <ListItemText primary="Profile"/>
             </ListItemButton>
         </ListItem>
 
-        <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}}>
+        <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
             <ListItemButton component={Link} to="/leave-requests">
-                <ListItemIcon sx={{ minWidth: 32,color:'white'  }}>
+                <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                     <DataExplorationIcon fontSize="small"/>
                 </ListItemIcon>
                 <ListItemText primary="Leave Requests"/>
@@ -71,9 +71,9 @@ export const Sidebar = ({role}: { role: 'MEMBER' | 'TEAM_LEAD' | 'ADMIN' }) => (
         </ListItem>
 
         {(role === 'TEAM_LEAD') && (
-            <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}}>
+            <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
                 <ListItemButton component={Link} to="/leave-approval">
-                    <ListItemIcon sx={{ minWidth: 32,color:'white'  }}>
+                    <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                         <ApprovalIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText primary="Leave Approvals"/>
@@ -83,27 +83,27 @@ export const Sidebar = ({role}: { role: 'MEMBER' | 'TEAM_LEAD' | 'ADMIN' }) => (
 
         {role === 'ADMIN' && (
             <>
-                <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}}>
+                <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
                     <ListItemButton component={Link} to="/leave-policies">
-                        <ListItemIcon sx={{ minWidth: 32,color:'white'  }}>
+                        <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                             <PolicyIcon fontSize="small"/>
                         </ListItemIcon>
                         <ListItemText primary="Leave Policy"/>
                     </ListItemButton>
                 </ListItem>
 
-                <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}}>
+                <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
                     <ListItemButton component={Link} to="/users">
-                        <ListItemIcon sx={{ minWidth: 32, color:'white'  }}>
+                        <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                             <PersonIcon fontSize="small"/>
                         </ListItemIcon>
                         <ListItemText primary="Manage Users"/>
                     </ListItemButton>
                 </ListItem>
 
-                <ListItem disablePadding sx={{'&:hover':{backgroundColor: '#37474F'}}}>
+                <ListItem disablePadding sx={{'&:hover': {backgroundColor: '#37474F'}}}>
                     <ListItemButton component={Link} to="/teams">
-                        <ListItemIcon sx={{ minWidth: 32, color:'white'  }}>
+                        <ListItemIcon sx={{minWidth: 32, color: 'white'}}>
                             <GroupsIcon fontSize="small"/>
                         </ListItemIcon>
                         <ListItemText primary="Manage Teams"/>

@@ -1,10 +1,10 @@
 import React from 'react';
 import {Avatar, Box, Card, CardContent, List, ListItem, ListItemAvatar, ListItemText, Typography,} from '@mui/material';
-import {useAuth} from '../../context/AuthContext';
-import {useEmployees} from '../../hooks/useEmployees';
-import Layout from "../../pages/Layout.tsx";
-import {Sidebar} from "../../pages/Sidebar.tsx";
-import CenteredBox from "../CardDesign.tsx";
+import {useAuth} from '../../../context/AuthContext.ts';
+import {useEmployees} from '../../../hooks/useEmployees.ts';
+import Layout from "../../../pages/Layout.tsx";
+import {Sidebar} from "../../../pages/Sidebar.tsx";
+import CenteredBox from "../../CardDesign.tsx";
 
 const TeamMembers: React.FC = () => {
     const {user} = useAuth();
@@ -23,7 +23,7 @@ const TeamMembers: React.FC = () => {
     }
 
     const teamMembers = employees.filter(
-        (emp) => emp.team_id === user.team_id && emp.id !== user.id && emp.is_active
+        (emp) => emp.team_id === user.team_id && emp.is_active
     );
 
     return (

@@ -3,11 +3,11 @@ import {
     Box, Typography, Table, TableHead, TableRow, TableCell, TableBody, Pagination,
     Paper
 } from '@mui/material';
-import { useAuth } from '../../context/AuthContext';
-import {Sidebar} from "../../pages/Sidebar.tsx";
-import Layout from '../../pages/Layout.tsx';
-import {useLeaveRequest} from "../../hooks/useLeaveRequest.ts";
-import {usePagination} from "../../hooks/usePagination.ts";
+import { useAuth } from '../../../context/AuthContext.ts';
+import {Sidebar} from "../../../pages/Sidebar.tsx";
+import Layout from '../../../pages/Layout.tsx';
+import {useLeaveRequest} from "../../../hooks/useLeaveRequest.ts";
+import {usePagination} from "../../../hooks/usePagination.ts";
 
 const LeaveRequests: React.FC = () => {
     const { user } = useAuth();

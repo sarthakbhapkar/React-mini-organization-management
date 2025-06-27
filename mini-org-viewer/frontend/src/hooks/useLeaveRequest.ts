@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../utils/api';
 import type { Leave } from '../types';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.ts';
 
 export function useLeaveRequest() {
     const { token } = useAuth();

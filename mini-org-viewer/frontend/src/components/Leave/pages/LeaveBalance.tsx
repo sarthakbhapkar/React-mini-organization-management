@@ -1,31 +1,18 @@
-import { useLeavePolicy } from '../../hooks/useLeavePolicy';
-import { useLeaveRequest } from '../../hooks/useLeaveRequest';
-import { useAuth } from '../../context/AuthContext';
-import {Sidebar} from "../../pages/Sidebar.tsx";
-import Layout from "../../pages/Layout.tsx";
+import {Sidebar} from "../../../pages/Sidebar.tsx";
+import Layout from "../../../pages/Layout.tsx";
 import {Box, Card, CardContent, Grid, Typography} from "@mui/material";
-import {calculateUsedLeaves} from "./utils/LeaveUtils.tsx";
+import {useLeaveBalance} from "../hooks/useLeaveBalance.ts";
 
 export default function LeaveBalance() {
 
-    const { user } = useAuth();
-    const { policy, loading: loadingPolicy } = useLeavePolicy();
-    const { requests, loading: loadingRequests} = useLeaveRequest();
+    const { user, loading, balance, policy } = useLeaveBalance();
 
-    if (loadingPolicy || loadingRequests) {
+    if (!user) return null;
+
+    if (loading) {
         return <div>Loading leave balance...</div>;
     }
 
-    const myRequests = requests.filter((req: { user_id: string; }) => req.user_id === user?.id);
-    const used = calculateUsedLeaves(myRequests);
-
-    const balance = {
-        sick_leave: policy.sick_leave - used.SICK,
-        casual_leave: policy.casual_leave - used.CASUAL,
-        work_from_home: policy.work_from_home - used.WFH,
-    };
-
-    if(!user) return;
     return (
         <Layout>
             <Sidebar role={user.role}/>

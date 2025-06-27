@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box,Card, CardContent, Grid, Typography} from '@mui/material';
 import {Sidebar} from './Sidebar.tsx';
-import {useAuth} from "../context/AuthContext.tsx";
+import {useAuth} from "../context/AuthContext.ts";
 import {useEmployees} from '../hooks/useEmployees.ts';
 import {useTeams} from '../hooks/useTeams.ts';
 import Layout from './Layout';

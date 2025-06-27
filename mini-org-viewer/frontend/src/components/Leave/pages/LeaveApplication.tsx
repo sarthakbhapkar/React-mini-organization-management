@@ -1,104 +1,25 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Alert, Box, Button, MenuItem, Snackbar, TextField, Typography} from '@mui/material';
-import {api} from '../../utils/api.ts';
-import {useAuth} from "../../context/AuthContext.tsx";
-import CenteredBox from "../CardDesign";
-import type {LeaveFormState, LeaveType, PostLeaveRequest} from "../../types";
-import {Sidebar} from "../../pages/Sidebar.tsx";
-import Layout from "../../pages/Layout.tsx";
-import {useLeaveRequest} from "../../hooks/useLeaveRequest.ts";
-import {useLeavePolicy} from "../../hooks/useLeavePolicy.ts";
-import {calculateUsedLeaves} from "./utils/LeaveUtils.tsx";
-
-const leaveTypeToPolicyKey = {
-    SICK: 'sick_leave',
-    CASUAL: 'casual_leave',
-    WFH: 'work_from_home'
-} as const;
+import {useAuth} from "../../../context/AuthContext.ts";
+import CenteredBox from "../../CardDesign.tsx";
+import type {LeaveType} from "../../../types";
+import {Sidebar} from "../../../pages/Sidebar.tsx";
+import Layout from "../../../pages/Layout.tsx";
+import {useLeaveForm} from "../hooks/useLeaveForm.ts";
 
 const LeaveApplication: React.FC = () => {
-    const {user, token} = useAuth();
-    const {policy} = useLeavePolicy();
-    const {requests} = useLeaveRequest();
-    const [error, setError] = useState<string | null>(null);
-    const [leave, setLeave] = useState<LeaveFormState>({
-        type: 'SICK',
-        startDate: '',
-        endDate: '',
-        reason: ''
-    });
 
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-
-    const getAvailableBalance = (): number => {
-        const used = calculateUsedLeaves(requests);
-        const type = leave.type;
-
-        const policyKey = leaveTypeToPolicyKey[type];
-        const total = policy[policyKey];
-        const usedDays = used[type];
-        console.log(`Leave Type: ${type}, Total: ${total}, Used: ${usedDays}`);
-
-        return total - usedDays;
-    };
-
-    const handleSubmit = async () => {
-        if (!user || !token) {
-            console.log('User or token not available');
-            return;
-        }
-
-        if (!leave.startDate || !leave.endDate) {
-            setError('Please select both Start and End dates.');
-            return;
-        }
-        if (leave.startDate > leave.endDate) {
-            setError('End date cannot be before Start date.');
-            return;
-        }
-
-        const daysRequested =
-            (new Date(leave.endDate).getTime() - new Date(leave.startDate).getTime()) /
-            (1000 * 60 * 60 * 24) + 1;
-
-        const availableBalance = getAvailableBalance();
-
-        if (daysRequested > availableBalance) {
-            setError(`Not enough ${leave.type} leave balance. You have only ${availableBalance} day(s) left.`);
-            return;
-        }
-
-        try {
-            await api.post<PostLeaveRequest>('/api/leave/requests', {
-                leave_type: leave.type,
-                start_date: leave.startDate,
-                end_date: leave.endDate,
-                reason: leave.reason,
-            }, token);
-
-            setOpenSnackbar(true);
-            setLeave({type: 'SICK', startDate: '', endDate: '', reason: ''});
-            setError(null);
-        } catch (err: unknown) {
-            if (err instanceof Error)
-                console.error('Leave request failed:', err.message);
-            else
-                console.error('Leave request failed:', err);
-        }
-    };
-
-    const validateLeaveBalance = (type: LeaveType, start: string, end: string): string | null => {
-        if (!start || !end) return null;
-
-        const daysRequested =
-            (new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24) + 1;
-
-        const available = getAvailableBalance();
-
-        return daysRequested > available
-            ? `Not enough ${type} leave balance.`
-            : null;
-    };
+    const { user } = useAuth();
+    const {
+        leave,
+        setLeave,
+        error,
+        setError,
+        openSnackbar,
+        setOpenSnackbar,
+        handleSubmit,
+        validateLeaveBalance
+    } = useLeaveForm();
 
     if (!user) return null;
     const today = new Date().toISOString().split('T')[0];

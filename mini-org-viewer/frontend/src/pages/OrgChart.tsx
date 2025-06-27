@@ -1,6 +1,6 @@
 import {Sidebar} from "./Sidebar";
 import Layout from './Layout';
-import {useAuth} from '../context/AuthContext';
+import {useAuth} from '../context/AuthContext.ts';
 
 export default function OrgChart(){
     const {user} = useAuth();

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
     Box,
     Button,
@@ -11,66 +11,24 @@ import {
     TableRow,
     Typography
 } from '@mui/material';
-import {useAuth} from '../../context/AuthContext';
-import {Sidebar} from '../../pages/Sidebar';
-import Layout from '../../pages/Layout';
-import {useEmployees} from '../../hooks/useEmployees';
-import {useLeaveRequest} from '../../hooks/useLeaveRequest';
-import {api} from "../../utils/api.ts";
-import {usePagination} from "../../hooks/usePagination.ts";
+import {Sidebar} from '../../../pages/Sidebar.tsx';
+import Layout from '../../../pages/Layout.tsx';
+import {useLeaveApproval} from "../hooks/useLeaveApproval.ts";
 
 const LeaveApproval: React.FC = () => {
-    const {user, token} = useAuth();
-    const {requests, loading, reFetch} = useLeaveRequest();
-    const {employees} = useEmployees();
-    const { page, limit, totalPages, setPage, updateTotal } = usePagination();
-
-    useEffect(() => {
-        updateTotal(relevantLeaves.length);
-    }, [requests, employees]);
+    const {
+        user,
+        employees,
+        loading,
+        paginatedLeaves,
+        handleApprove,
+        handleReject,
+        page,
+        totalPages,
+        setPage,
+    } = useLeaveApproval();
 
     if (!user) return null;
-
-    const myTeamId = employees.find(e => e.id === user.id)?.team_id;
-
-    const relevantLeaves = requests.filter(req => {
-        if (user.role === 'ADMIN') {
-            return req.status === 'PENDING';
-        }
-
-        if (user.role === 'TEAM_LEAD') {
-            const requestUser = employees.find(e => e.id === req.user_id);
-            return req.status === 'PENDING' && requestUser?.team_id === myTeamId;
-        }
-
-        return false;
-    });
-
-    const paginatedLeaves = relevantLeaves.slice((page - 1) * limit, page * limit);
-
-    function handleApprove(id: string) {
-        if (!token) return;
-        return async () => {
-            try {
-                await api.put(`/api/leave/requests/${id}/approve`, {}, token);
-                reFetch().then();
-            } catch (error) {
-                console.error('Error approving leave request:', error);
-            }
-        };
-    }
-
-    function handleReject(id: string) {
-        if (!token) return;
-        return async () => {
-            try {
-                await api.put(`/api/leave/requests/${id}/approve`, {}, token);
-                reFetch().then();
-            } catch (error) {
-                console.error('Error approving leave request:', error);
-            }
-        };
-    }
 
     return (
         <Layout>
