@@ -2,8 +2,7 @@ import React from 'react';
 import {
     Alert, Box, Button, Checkbox, Dialog, DialogActions, DialogContent,
     DialogTitle, FormControl, InputLabel, ListItemText, MenuItem, OutlinedInput,
-    Pagination, Paper, Select, Snackbar, Table, TableBody, TableCell,
-    TableHead, TableRow, TextField, Typography
+    Select, Snackbar, TextField, Typography
 } from '@mui/material';
 
 import Layout from '../../../pages/Layout.tsx';
@@ -12,6 +11,9 @@ import { useTeamForm } from '../hook/useTeamForm.ts';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import DataTable from '../../DataTable';
+import type { Team } from '../../../types';
+import type {Column} from "../../DataTable.tsx";
 
 const TeamManagement: React.FC = () => {
     const {
@@ -19,8 +21,45 @@ const TeamManagement: React.FC = () => {
         openDialog, setOpenDialog, editMode, selectedMembers, setSelectedMembers,
         formData, setFormData, handleOpenAdd, handleEdit, handleSubmit,
         handleDeactivate, deactivateDialogOpen, setDeactivateDialogOpen, setSelectedId, error, openSnackbar, setOpenSnackbar,
-        page, totalPages, setPage, paginatedTeams
+        page, setPage, filteredTeams
     } = useTeamForm();
+
+    const columns: Column<Team>[] = [
+        { label: 'Name', key: 'name' },
+        { label: 'Description', key: 'description' },
+        {
+            label: 'Status',
+            key: 'is_active',
+            render: (row: Team) => row.is_active ? 'Active' : 'Inactive'
+        },
+        {
+            label: 'Team Lead',
+            key: 'team_lead_id',
+            align: 'center'
+        },
+        {
+            label: 'Actions',
+            key: 'id',
+            align: 'center',
+            render: (row: Team) => (
+                <>
+                    <Button onClick={() => handleEdit(row)} startIcon={<EditIcon />} sx={{ mr: 1 }} />
+                    <Button
+                        color="error"
+                        onClick={() => {
+                            setSelectedId(row.id);
+                            setDeactivateDialogOpen(true);
+                        }}
+                        startIcon={<DeleteIcon />}
+                    />
+                </>
+            )
+        }
+    ];
+
+    const itemsPerPage = 5;
+    const paginatedTeams = filteredTeams.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+    const totalPages = Math.ceil(filteredTeams.length / itemsPerPage);
 
     if (!user) return null;
 
@@ -42,49 +81,14 @@ const TeamManagement: React.FC = () => {
                     margin="normal"
                 />
 
-                {loading ? (
-                    <Typography>Loading...</Typography>
-                ) : (
-                    <Paper>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>Description</TableCell>
-                                    <TableCell>Status</TableCell>
-                                    <TableCell align="center">Team Lead</TableCell>
-                                    <TableCell align="center">Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {paginatedTeams.map(team => (
-                                    <TableRow key={team.id}>
-                                        <TableCell>{team.name}</TableCell>
-                                        <TableCell>{team.description}</TableCell>
-                                        <TableCell>{team.is_active ? 'Active' : 'Inactive'}</TableCell>
-                                        <TableCell align="center">{team.team_lead_id}</TableCell>
-                                        <TableCell align="center">
-                                            <Button onClick={() => handleEdit(team)} startIcon={<EditIcon />} />
-                                            <Button color="error" onClick={() => {
-                                                setSelectedId(team.id);
-                                                setDeactivateDialogOpen(true);
-                                            }} startIcon={<DeleteIcon />} />
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </Paper>
-                )}
-
-                <Box display="flex" justifyContent="center" mt={2}>
-                    <Pagination
-                        count={totalPages}
-                        page={page}
-                        onChange={(_, value) => setPage(value)}
-                        color="primary"
-                    />
-                </Box>
+                <DataTable
+                    columns={columns}
+                    rows={paginatedTeams}
+                    loading={loading}
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                />
 
                 <Snackbar
                     open={openSnackbar}

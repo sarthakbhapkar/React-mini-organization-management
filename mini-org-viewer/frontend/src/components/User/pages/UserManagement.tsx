@@ -1,15 +1,17 @@
 import React from 'react';
 import {
-    Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem,
-    Pagination, Paper, Snackbar, Table, TableBody, TableCell, TableHead, TableRow,
+    Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Snackbar,
     TextField, Typography
 } from '@mui/material';
 import { Sidebar } from '../../../pages/Sidebar.tsx';
 import Layout from '../../../pages/Layout.tsx';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useUserForm } from '../hooks/useUserForm.ts';
+import DataTable from '../../DataTable';
+import type { User } from '../../../types';
+import type {Column} from "../../DataTable.tsx";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 const UserManagement: React.FC = () => {
     const {
@@ -19,6 +21,36 @@ const UserManagement: React.FC = () => {
         handleOpenAdd, handleEdit, handleSubmit, handleDeactivate,
         page, totalPages, setPage, filteredUsers, openSnackbar, setOpenSnackbar, error
     } = useUserForm();
+
+    const columns: Column<User>[] = [
+        { label: 'Name', key: 'name' },
+        { label: 'Email', key: 'email' },
+        { label: 'Role', key: 'role' },
+        {
+            label: 'Status',
+            key: 'is_active',
+            align: 'center',
+            render: (emp) => emp.is_active ? 'Active' : 'Inactive'
+        },
+        {
+            label: 'Actions',
+            key: 'id',
+            align: 'center',
+            render: (emp) => (
+                <>
+                    <Button onClick={() => handleEdit(emp)} sx={{ mr: 1 }} startIcon={<EditIcon />} />
+                    <Button
+                        color="error"
+                        onClick={() => {
+                            setSelectedId(emp.id);
+                            setDeactivateDialogOpen(true);
+                        }}
+                        startIcon={<DeleteIcon />}
+                    />
+                </>
+            )
+        }
+    ];
 
     if (!user) return null;
 
@@ -39,49 +71,15 @@ const UserManagement: React.FC = () => {
                     margin="normal"
                 />
 
-                {loading ? (
-                    <Typography>Loading...</Typography>
-                ) : (
-                    <Paper>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>Email</TableCell>
-                                    <TableCell>Role</TableCell>
-                                    <TableCell align="center">Status</TableCell>
-                                    <TableCell align="center">Actions</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {filteredUsers.map(emp => (
-                                    <TableRow key={emp.id}>
-                                        <TableCell>{emp.name}</TableCell>
-                                        <TableCell>{emp.email}</TableCell>
-                                        <TableCell>{emp.role}</TableCell>
-                                        <TableCell align="center">{emp.is_active ? 'Active' : 'Inactive'}</TableCell>
-                                        <TableCell align="center">
-                                            <Button onClick={() => handleEdit(emp)} sx={{ mr: 1 }} startIcon={<EditIcon />} />
-                                            <Button color="error" onClick={() => {
-                                                setSelectedId(emp.id);
-                                                setDeactivateDialogOpen(true);
-                                            }} startIcon={<DeleteIcon />} />
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </Paper>
-                )}
+                <DataTable
+                    columns={columns}
+                    rows={filteredUsers}
+                    loading={loading}
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                />
 
-                <Box display="flex" justifyContent="center" mt={2}>
-                    <Pagination
-                        count={totalPages}
-                        page={page}
-                        onChange={(_, value) => setPage(value)}
-                        color="primary"
-                    />
-                </Box>
                 <Snackbar
                     open={openSnackbar}
                     autoHideDuration={6000}
