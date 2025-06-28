@@ -1,74 +1,149 @@
-import React from 'react';
-import {Alert, Box, Button, Snackbar, TextField, Typography} from '@mui/material';
-import CenteredBox from "../../CardDesign.tsx";
-import Layout from "../../../pages/Layout.tsx";
-import {Sidebar} from "../../../pages/Sidebar.tsx";
-import {useProfileForm} from "../hook/useProfile.ts";
+import React, { useState } from 'react';
+import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Grid,
+    Snackbar,
+    TextField,
+    Typography
+} from '@mui/material';
+import Layout from '../../../pages/Layout';
+import { Sidebar } from '../../../pages/Sidebar';
+import { useProfileForm } from '../hook/useProfile.ts';
+import {useLeaveBalance} from "../../Leave/hooks/useLeaveBalance.ts";
+import {useTeams} from "../../../hooks/useTeams.ts";
+import EditIcon from "@mui/icons-material/Edit";
 
 const Profile: React.FC = () => {
     const {
         user,
         name,
         password,
-        error,
         openSnackbar,
         setName,
         setPassword,
+        error,
         setOpenSnackbar,
         handleUpdate
     } = useProfileForm();
+    const { balance } = useLeaveBalance();
+    const { teams } = useTeams();
+
+    const [editMode, setEditMode] = useState(false);
+
     if (!user) return null;
+    const team = teams.find(t => t.id === user.team_id);
+
+    const handleCancel = () => {
+        setName(user.name);
+        setPassword('');
+        setEditMode(false);
+    };
 
     return (
         <Layout>
-            <Sidebar role={user.role}/>
-            <Box sx={{flexGrow: 1}}>
-                <CenteredBox>
-                    <Typography variant="h4" gutterBottom>Profile</Typography>
-                    {error && (
-                        <Typography color="error" sx={{mt: 1}}>
-                            {error}
-                        </Typography>
-                    )}
-                    <TextField
-                        label="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        fullWidth
-                        margin="normal"
-                        required
-                    />
-                    <TextField
-                        label="Email"
-                        value={user.email}
-                        disabled
-                        fullWidth
-                        margin="normal"
-                        required
-                    />
-                    <TextField
-                        label="New Password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <Button color="secondary" variant="contained" onClick={handleUpdate}
-                            sx={{mt: 2, backgroundColor: '#263238'}}>
-                        Update Profile
-                    </Button>
-                    <Snackbar
-                        open={openSnackbar}
-                        autoHideDuration={6000}
-                        onClose={() => setOpenSnackbar(false)}
-                        anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-                    >
-                        <Alert severity="success">
-                            Profile Updated Successfully!
-                        </Alert>
-                    </Snackbar>
-                </CenteredBox>
+            <Sidebar role={user.role} />
+            <Box sx={{ padding: 4, width:'100%' }}>
+                <Typography variant="h4" gutterBottom><strong>Profile Overview</strong></Typography>
+
+                <Grid container spacing={3} sx={{ mt: 7}}>
+                    <Grid size={{xs:12, md:4}}>
+                        <Card sx={{ mb: 3 }}>
+                            <CardContent>
+                                <Typography variant="h5" gutterBottom><strong>Team Details</strong></Typography>
+                                {user.team_id ? (
+                                    <>
+                                        <Typography sx={{ fontSize: 16 }}><strong>Team ID:</strong> {user.team_id}</Typography>
+                                        <Typography sx={{ mt: 1, fontSize: 16 }}><strong>Team Name:</strong> {team?.name}</Typography>
+                                    </>
+                                ) : (
+                                    <Typography>No team assigned</Typography>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h5" gutterBottom><strong>Leave Summary</strong></Typography>
+                                <Typography sx={{ fontSize: 16 }}><strong>Sick Leaves:</strong> {balance.sick_leave ?? '-'}</Typography>
+                                <Typography sx={{ fontSize: 16 }}><strong>Casual Leaves:</strong> {balance.casual_leave ?? '-'}</Typography>
+                                <Typography sx={{ fontSize: 16 }}><strong>WFH:</strong> {balance.work_from_home ?? '-'}</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid size={{xs:12, md:8}}>
+                        <Card sx={{ height: '100%', width:'50%', ml:10 }}>
+                            <CardContent>
+                                <Typography variant="h5" gutterBottom><strong>Basic Info</strong></Typography>
+                                {error && (
+                                    <Typography color="error" sx={{mt: 1}}>
+                                        {error}
+                                    </Typography>
+                                )}
+                                <Typography sx={{ fontSize: 16 }}>
+                                    <strong>Name:</strong> {editMode ? (
+                                    <TextField
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                        size="small"
+                                        fullWidth
+                                        sx={{ mt: 1 }}
+                                    />
+                                ) : (
+                                    name
+                                )}
+                                </Typography>
+
+                                <Typography sx={{ mt: 2, fontSize: 16 }}><strong>Email:</strong> {user.email}</Typography>
+                                <Typography sx={{ mt: 2, fontSize: 16 }}><strong>Role:</strong> {user.role}</Typography>
+
+                                {editMode && (
+                                    <TextField
+                                        label="New Password"
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        margin="normal"
+                                        fullWidth
+                                        size="small"
+                                        sx={{ mt: 2 }}
+                                    />
+                                )}
+
+                                <Box sx={{ mt: 3 }}>
+                                    {editMode ? (
+                                        <>
+                                            <Button variant="contained" sx={{ mr: 2, backgroundColor: '#263238' }} onClick={handleUpdate}>
+                                                Save
+                                            </Button>
+                                            <Button variant="outlined" color="secondary" onClick={handleCancel}>
+                                                Cancel
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        <Button variant="contained" startIcon={<EditIcon/>} sx={{ backgroundColor: '#263238' }} onClick={() => setEditMode(true)}>
+                                            Edit Profile
+                                        </Button>
+                                    )}
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
+
+
+            <Snackbar
+                    open={openSnackbar}
+                    autoHideDuration={6000}
+                    onClose={() => setOpenSnackbar(false)}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                >
+                    <Alert severity="success">Profile Updated Successfully!</Alert>
+                </Snackbar>
             </Box>
         </Layout>
     );

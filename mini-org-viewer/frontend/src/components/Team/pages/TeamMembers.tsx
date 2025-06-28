@@ -31,7 +31,7 @@ const TeamMembers: React.FC = () => {
             <Sidebar role={user.role}/>
             <Box sx={{flexGrow: 1}}>
                 <CenteredBox>
-                    <CardContent>
+                    <CardContent sx={{width: '100%', maxWidth: 600}}>
                         <Typography variant="h6" gutterBottom>
                             {user.role === 'TEAM_LEAD' ? 'Your Team Members' : 'Your Teammates'}
                         </Typography>
