@@ -19,7 +19,8 @@ const UserManagement: React.FC = () => {
         openDialog, setOpenDialog, editMode, formData, setFormData,
         deactivateDialogOpen, setDeactivateDialogOpen, setSelectedId,
         handleOpenAdd, handleEdit, handleSubmit, handleDeactivate,
-        page, totalPages, setPage, filteredUsers, openSnackbar, setOpenSnackbar, error
+        page, totalPages, setPage, filteredUsers, openSnackbar, setOpenSnackbar, error,
+        selectedRole, setSelectedRole
     } = useUserForm();
 
     const columns: Column<User>[] = [
@@ -63,13 +64,29 @@ const UserManagement: React.FC = () => {
                     <Button color="secondary" variant="contained" startIcon={<PersonAddIcon />} onClick={handleOpenAdd}
                             sx={{ mb: 2, mt: 2, backgroundColor: '#263238' }}>New Employee</Button>
                 </Box>
-                <TextField
-                    label="Search Users"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    sx={{ width: '30%', ml: 2 }}
-                    margin="normal"
-                />
+                <Box sx={{ display: 'flex', gap: 3, ml: 2 }}>
+                    <TextField
+                        label="Search Users"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        sx={{ width: '25%'}}
+                        margin="normal"
+                    />
+
+                    <TextField
+                        select
+                        label="Filter by Role"
+                        value={selectedRole}
+                        onChange={(e) => setSelectedRole(e.target.value)}
+                        sx={{ width: 200 }}
+                        margin="normal"
+                    >
+                        <MenuItem value="ALL">All Roles</MenuItem>
+                        <MenuItem value="ADMIN">Admin</MenuItem>
+                        <MenuItem value="TEAM_LEAD">Team Lead</MenuItem>
+                        <MenuItem value="MEMBER">Member</MenuItem>
+                    </TextField>
+                </Box>
 
                 <DataTable
                     columns={columns}

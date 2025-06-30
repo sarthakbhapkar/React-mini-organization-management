@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-    Box, Typography
+    Box, MenuItem, TextField, Typography
 } from '@mui/material';
 import { useAuth } from '../../../context/AuthContext.ts';
 import {Sidebar} from "../../../pages/Sidebar.tsx";
@@ -16,12 +16,20 @@ const LeaveRequests: React.FC = () => {
     const { user } = useAuth();
     const { requests, loading } = useLeaveRequest();
     const { page, limit, totalPages, setPage, updateTotal } = usePagination();
+    const [selectedStatus, setSelectedStatus] = useState('ALL');
+    const [selectedType, setSelectedType] = useState('ALL');
+
+    const filteredRequests = requests.filter((req) => {
+        const statusMatch = selectedStatus === 'ALL' || req.status === selectedStatus;
+        const typeMatch = selectedType === 'ALL' || req.leave_type === selectedType;
+        return statusMatch && typeMatch;
+    });
+
+    const paginatedRequests = filteredRequests.slice((page - 1) * limit, page * limit);
 
     useEffect(() => {
-        updateTotal(requests.length);
-    }, [requests]);
-
-    const paginatedRequests = requests.slice((page - 1) * limit, page * limit);
+        updateTotal(filteredRequests.length);
+    }, [filteredRequests]);
 
     const columns: Column<Leave>[] = [
         { label: 'Employee ID', key: 'user_id' },
@@ -50,8 +58,36 @@ const LeaveRequests: React.FC = () => {
             <LeaveNavbar />
             <Box sx={{ padding: 3 }}>
             <Typography variant="h4" gutterBottom>
-                All Leave Requests
+                Leave Requests
             </Typography>
+
+                <Box sx={{ display: 'flex', gap: 3, mb: 3, mt:3 }}>
+                    <TextField
+                        select
+                        label="Filter by Status"
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                        sx={{ width: 200 }}
+                    >
+                        <MenuItem value="ALL">All Status</MenuItem>
+                        <MenuItem value="PENDING">Pending</MenuItem>
+                        <MenuItem value="APPROVED">Approved</MenuItem>
+                        <MenuItem value="REJECTED">Rejected</MenuItem>
+                    </TextField>
+
+                    <TextField
+                        select
+                        label="Filter by Leave Type"
+                        value={selectedType}
+                        onChange={(e) => setSelectedType(e.target.value)}
+                        sx={{ width: 200 }}
+                    >
+                        <MenuItem value="ALL">All Types</MenuItem>
+                        <MenuItem value="SICK">Sick</MenuItem>
+                        <MenuItem value="CASUAL">Casual</MenuItem>
+                        <MenuItem value="WFH">Work From Home</MenuItem>
+                    </TextField>
+                </Box>
 
             <DataTable
                 columns={columns}

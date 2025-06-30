@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Box,
-    Button,
+    Button, MenuItem, TextField,
     Typography
 } from '@mui/material';
 import {Sidebar} from '../../../pages/Sidebar.tsx';
@@ -22,6 +22,8 @@ const LeaveApproval: React.FC = () => {
         page,
         totalPages,
         setPage,
+        setSelectedType,
+        selectedType,
     } = useLeaveApproval();
 
     const columns: Column<Leave>[] = [
@@ -65,7 +67,23 @@ const LeaveApproval: React.FC = () => {
                 <Typography variant="h4" gutterBottom>
                     Leave Approvals
                 </Typography>
-                <DataTable
+                    <Box sx={{ display: 'flex', gap: 3, mb: 3, mt:3 }}>
+                        <TextField
+                            select
+                            label="Filter by Leave Type"
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                            sx={{ width: 200 }}
+                            size="small"
+                        >
+                            <MenuItem value="ALL">All</MenuItem>
+                            <MenuItem value="SICK">Sick</MenuItem>
+                            <MenuItem value="CASUAL">Casual</MenuItem>
+                            <MenuItem value="WFH">Work From Home</MenuItem>
+                        </TextField>
+                    </Box>
+
+                    <DataTable
                     columns={columns}
                     rows={paginatedLeaves}
                     loading={loading}

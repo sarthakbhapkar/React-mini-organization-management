@@ -77,7 +77,7 @@ function DataTable<T>({
                 </Table>
             </TableContainer>
 
-            {page && totalPages && onPageChange && (
+            {page && totalPages!==undefined && totalPages>0 && onPageChange && (
                 <Box display="flex" justifyContent="center" mt={2}>
                     <Pagination
                         count={totalPages}

@@ -21,6 +21,7 @@ export const useTeamForm = () => {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [selectedStatus, setSelectedStatus] = useState<string>('ALL');
 
     const [formData, setFormData] = useState({
         id: '',
@@ -30,9 +31,11 @@ export const useTeamForm = () => {
         is_active: true,
     });
 
-    const filteredTeams = teams.filter(team =>
-        team.name.toLowerCase().includes(debouncedSearch.toLowerCase()) && team.is_active
-    );
+    const filteredTeams = teams.filter((team) =>{
+        const matchesSearch= team.name.toLowerCase().includes(debouncedSearch.toLowerCase())
+        const matchesStatus = selectedStatus === 'ALL' || (selectedStatus === 'ACTIVE' && team.is_active) || (selectedStatus === 'INACTIVE' && !team.is_active);
+        return matchesSearch && matchesStatus;
+    });
 
     const paginatedTeams = filteredTeams.slice((page - 1) * limit, page * limit);
 
@@ -131,6 +134,8 @@ export const useTeamForm = () => {
         setPage,
         updateTotal,
         paginatedTeams,
-        filteredTeams
+        filteredTeams,
+        setSelectedStatus,
+        selectedStatus
     };
 };

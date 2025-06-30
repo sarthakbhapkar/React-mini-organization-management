@@ -1,9 +1,10 @@
-import { useEffect, useMemo } from 'react';
+import {useEffect, useState} from 'react';
 import { useAuth } from '../../../context/AuthContext.ts';
 import { useEmployees } from '../../../hooks/useEmployees';
 import { useLeaveRequest } from '../../../hooks/useLeaveRequest';
 import { usePagination } from '../../../hooks/usePagination';
 import { api } from '../../../utils/api';
+import type {Leave} from "../../../types";
 
 export const useLeaveApproval = () => {
     const { user, token } = useAuth();
@@ -11,26 +12,29 @@ export const useLeaveApproval = () => {
     const { employees } = useEmployees();
     const { page, limit, totalPages, setPage, updateTotal } = usePagination();
 
-    const myTeamId = employees.find(e => e.id === user?.id)?.team_id;
+    const [selectedType, setSelectedType] = useState('ALL');
 
-    const relevantLeaves = useMemo(() => {
-        if (!user) return [];
+    let relevantLeaves: Leave[] = [];
+    if (user) {
+        const myTeamId = employees.find(e => e.id === user?.id)?.team_id;
 
-        return requests.filter(req => {
+        relevantLeaves = requests.filter(req => {
+            const typeMatch = selectedType === 'ALL' || req.leave_type === selectedType;
+
             if (user.role === 'ADMIN') {
-                return req.status === 'PENDING';
+                return req.status === 'PENDING' && typeMatch;
             }
+
             if (user.role === 'TEAM_LEAD') {
                 const requestUser = employees.find(e => e.id === req.user_id);
-                return req.status === 'PENDING' && requestUser?.team_id === myTeamId;
+                return req.status === 'PENDING' && requestUser?.team_id === myTeamId && typeMatch;
             }
+
             return false;
         });
-    }, [requests, employees, user]);
+    }
 
-    const paginatedLeaves = useMemo(() => {
-        return relevantLeaves.slice((page - 1) * limit, page * limit);
-    }, [relevantLeaves, page, limit]);
+    const paginatedLeaves = relevantLeaves.slice((page - 1) * limit, page * limit);
 
     useEffect(() => {
         updateTotal(relevantLeaves.length);
@@ -70,5 +74,7 @@ export const useLeaveApproval = () => {
         totalPages,
         setPage,
         user,
+        selectedType,
+        setSelectedType
     };
 };

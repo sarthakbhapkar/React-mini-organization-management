@@ -18,6 +18,7 @@ export function useUserForm() {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
     const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [selectedRole, setSelectedRole] = useState<string>('ALL');
 
     const [formData, setFormData] = useState({
         id: '',
@@ -32,9 +33,11 @@ export function useUserForm() {
         updateTotal(total);
     }, [total]);
 
-    const filteredUsers = employees.filter((u) =>
-        u.name.toLowerCase().includes(debouncedSearch.toLowerCase())
-    );
+    const filteredUsers = employees.filter((u) => {
+        const matchesSearch = u.name.toLowerCase().includes(debouncedSearch.toLowerCase());
+        const matchesRole = selectedRole === 'ALL' || u.role === selectedRole;
+        return matchesSearch && matchesRole;
+    });
 
     const handleOpenAdd = () => {
         setEditMode(false);
@@ -46,7 +49,7 @@ export function useUserForm() {
         setEditMode(true);
         setFormData({ ...emp, password: '' });
         setOpenDialog(true);
-        reFetch();
+        reFetch().then();
     };
 
     const initiateDeactivate = (id: string) => {
@@ -131,6 +134,8 @@ export function useUserForm() {
         handleEdit,
         initiateDeactivate,
         handleSubmit,
-        handleDeactivate
+        handleDeactivate,
+        selectedRole,
+        setSelectedRole
     };
 }
