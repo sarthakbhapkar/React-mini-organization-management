@@ -1,5 +1,3 @@
-import {Sidebar} from "../../../pages/Sidebar.tsx";
-import Layout from "../../../pages/Layout.tsx";
 import {Box, Card, CardContent, Grid, Typography} from "@mui/material";
 import {useLeaveBalance} from "../hooks/useLeaveBalance.ts";
 import LeaveNavbar from "./LeaveNavBar.tsx";
@@ -15,8 +13,6 @@ export default function LeaveBalance() {
     }
 
     return (
-        <Layout>
-            <Sidebar role={user.role}/>
             <Box sx={{ width:'100%'}}>
                 <LeaveNavbar />
                 <Box sx={{ padding: 3 }}>
@@ -53,6 +49,5 @@ export default function LeaveBalance() {
             </Grid>
                 </Box>
         </Box>
-        </Layout>
     );
 }

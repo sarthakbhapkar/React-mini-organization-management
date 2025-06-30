@@ -1,21 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {
-    Box, MenuItem, TextField, Typography
-} from '@mui/material';
-import { useAuth } from '../../../context/AuthContext.ts';
-import {Sidebar} from "../../../pages/Sidebar.tsx";
-import Layout from '../../../pages/Layout.tsx';
+import {Box, MenuItem, TextField, Typography} from '@mui/material';
+import {useAuth} from '../../../context/AuthContext.ts';
 import {useLeaveRequest} from "../../../hooks/useLeaveRequest.ts";
 import {usePagination} from "../../../hooks/usePagination.ts";
+import type {Column} from '../../DataTable.tsx';
 import DataTable from '../../DataTable.tsx';
-import type { Column } from '../../DataTable.tsx';
-import type { Leave } from '../../../types';
+import type {Leave} from '../../../types';
 import LeaveNavbar from "./LeaveNavBar.tsx";
 
 const LeaveRequests: React.FC = () => {
-    const { user } = useAuth();
-    const { requests, loading } = useLeaveRequest();
-    const { page, limit, totalPages, setPage, updateTotal } = usePagination();
+    const {user} = useAuth();
+    const {requests, loading} = useLeaveRequest();
+    const {page, limit, totalPages, setPage, updateTotal} = usePagination();
     const [selectedStatus, setSelectedStatus] = useState('ALL');
     const [selectedType, setSelectedType] = useState('ALL');
 
@@ -32,12 +28,12 @@ const LeaveRequests: React.FC = () => {
     }, [filteredRequests]);
 
     const columns: Column<Leave>[] = [
-        { label: 'Employee ID', key: 'user_id' },
-        { label: 'Leave Type', key: 'leave_type' },
-        { label: 'Start Date', key: 'start_date' },
-        { label: 'End Date', key: 'end_date' },
-        { label: 'Reason', key: 'reason' },
-        { label: 'Status', key: 'status' },
+        {label: 'Employee ID', key: 'user_id'},
+        {label: 'Leave Type', key: 'leave_type'},
+        {label: 'Start Date', key: 'start_date'},
+        {label: 'End Date', key: 'end_date'},
+        {label: 'Reason', key: 'reason'},
+        {label: 'Status', key: 'status'},
         {
             label: 'Requested On',
             key: 'created_at',
@@ -52,22 +48,20 @@ const LeaveRequests: React.FC = () => {
     }
 
     return (
-        <Layout>
-        <Sidebar role={user.role}/>
-        <Box sx={{ width:'100%'}}>
-            <LeaveNavbar />
-            <Box sx={{ padding: 3 }}>
-            <Typography variant="h4" gutterBottom>
-                Leave Requests
-            </Typography>
+        <Box sx={{width: '100%'}}>
+            <LeaveNavbar/>
+            <Box sx={{padding: 3}}>
+                <Typography variant="h4" gutterBottom>
+                    Leave Requests
+                </Typography>
 
-                <Box sx={{ display: 'flex', gap: 3, mb: 3, mt:3 }}>
+                <Box sx={{display: 'flex', gap: 3, mb: 3, mt: 3}}>
                     <TextField
                         select
                         label="Filter by Status"
                         value={selectedStatus}
                         onChange={(e) => setSelectedStatus(e.target.value)}
-                        sx={{ width: 200 }}
+                        sx={{width: 200}}
                     >
                         <MenuItem value="ALL">All Status</MenuItem>
                         <MenuItem value="PENDING">Pending</MenuItem>
@@ -80,7 +74,7 @@ const LeaveRequests: React.FC = () => {
                         label="Filter by Leave Type"
                         value={selectedType}
                         onChange={(e) => setSelectedType(e.target.value)}
-                        sx={{ width: 200 }}
+                        sx={{width: 200}}
                     >
                         <MenuItem value="ALL">All Types</MenuItem>
                         <MenuItem value="SICK">Sick</MenuItem>
@@ -89,17 +83,16 @@ const LeaveRequests: React.FC = () => {
                     </TextField>
                 </Box>
 
-            <DataTable
-                columns={columns}
-                rows={paginatedRequests}
-                loading={loading}
-                page={page}
-                totalPages={totalPages}
-                onPageChange={setPage}
-            />
+                <DataTable
+                    columns={columns}
+                    rows={paginatedRequests}
+                    loading={loading}
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                />
             </Box>
         </Box>
-        </Layout>
     );
 };
 

@@ -18,9 +18,6 @@ import {
     TextField,
     Typography
 } from '@mui/material';
-
-import Layout from '../../../pages/Layout.tsx';
-import {Sidebar} from '../../../pages/Sidebar.tsx';
 import {useTeamForm} from '../hook/useTeamForm.ts';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -99,121 +96,118 @@ const TeamManagement: React.FC = () => {
     if (!user) return null;
 
     return (
-        <Layout>
-            <Sidebar role={user.role}/>
-            <Box sx={{width: '100%', padding: 3, paddingTop: 1}}>
-                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-                    <Typography variant="h4" sx={{mb: 2, ml: 2, mt: 2}}>Team Management</Typography>
-                    <Button color="secondary" variant="contained" startIcon={<GroupAddIcon/>} onClick={handleOpenAdd}
-                            sx={{mb: 2, mt: 2, backgroundColor: '#263238'}}>New Team</Button>
-                </Box>
+        <Box sx={{width: '100%', padding: 3, paddingTop: 1}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Typography variant="h4" sx={{mb: 2, ml: 2, mt: 2}}>Team Management</Typography>
+                <Button color="secondary" variant="contained" startIcon={<GroupAddIcon/>} onClick={handleOpenAdd}
+                        sx={{mb: 2, mt: 2, backgroundColor: '#263238'}}>New Team</Button>
+            </Box>
 
-                <Box sx={{display: 'flex', gap: 3, ml: 2}}>
+            <Box sx={{display: 'flex', gap: 3, ml: 2}}>
+                <TextField
+                    label="Search Teams"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    sx={{width: '25%'}}
+                    margin="normal"
+                />
+                <TextField
+                    select
+                    label="Filter by Status"
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    sx={{width: 200}}
+                    margin="normal"
+                >
+                    <MenuItem value="ALL">All Teams</MenuItem>
+                    <MenuItem value="ACTIVE">Active</MenuItem>
+                    <MenuItem value="INACTIVE">Inactive</MenuItem>
+                </TextField>
+            </Box>
+
+            <DataTable
+                columns={columns}
+                rows={paginatedTeams}
+                loading={loading}
+                page={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+            />
+
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={() => setOpenSnackbar(false)}
+                anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+            >
+                <Alert severity="success">Team Updated Successfully!</Alert>
+            </Snackbar>
+
+            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+                <DialogTitle>{editMode ? 'Edit Team' : 'Add Team'}</DialogTitle>
+                {error && (
+                    <Typography color="error" sx={{mt: 1, ml: 2}}>{error}</Typography>
+                )}
+                <DialogContent>
                     <TextField
-                        label="Search Teams"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        sx={{width: '25%'}}
-                        margin="normal"
+                        label="Name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        fullWidth margin="dense" required
                     />
                     <TextField
-                        select
-                        label="Filter by Status"
-                        value={selectedStatus}
-                        onChange={(e) => setSelectedStatus(e.target.value)}
-                        sx={{ width: 200 }}
-                        margin="normal"
-                    >
-                        <MenuItem value="ALL">All Teams</MenuItem>
-                        <MenuItem value="ACTIVE">Active</MenuItem>
-                        <MenuItem value="INACTIVE">Inactive</MenuItem>
-                    </TextField>
-                </Box>
+                        label="Description"
+                        value={formData.description}
+                        onChange={(e) => setFormData({...formData, description: e.target.value})}
+                        fullWidth margin="dense" multiline
+                    />
+                    <TextField
+                        label="Team Lead ID"
+                        value={formData.team_lead_id || ''}
+                        onChange={(e) => setFormData({...formData, team_lead_id: e.target.value})}
+                        fullWidth margin="dense" required
+                    />
+                    <FormControl fullWidth margin="dense">
+                        <InputLabel>Members</InputLabel>
+                        <Select
+                            multiple
+                            value={selectedMembers}
+                            onChange={(e) => setSelectedMembers(e.target.value as string[])}
+                            input={<OutlinedInput label="Members"/>}
+                            renderValue={(selected) =>
+                                selected.map(id => {
+                                    const emp = employees.find(e => e.id === id);
+                                    return emp?.name || id;
+                                }).join(', ')
+                            }
+                        >
+                            {employees.filter(emp => emp.is_active).map(emp => (
+                                <MenuItem key={emp.id} value={emp.id}>
+                                    <Checkbox checked={selectedMembers.includes(emp.id)}/>
+                                    <ListItemText primary={emp.name}/>
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button sx={{color: '#263238'}} onClick={() => setOpenDialog(false)}>Cancel</Button>
+                    <Button sx={{backgroundColor: '#263238'}} onClick={handleSubmit}
+                            variant="contained">Save</Button>
+                </DialogActions>
+            </Dialog>
 
-                <DataTable
-                    columns={columns}
-                    rows={paginatedTeams}
-                    loading={loading}
-                    page={page}
-                    totalPages={totalPages}
-                    onPageChange={setPage}
-                />
-
-                <Snackbar
-                    open={openSnackbar}
-                    autoHideDuration={6000}
-                    onClose={() => setOpenSnackbar(false)}
-                    anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-                >
-                    <Alert severity="success">Team Updated Successfully!</Alert>
-                </Snackbar>
-
-                <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-                    <DialogTitle>{editMode ? 'Edit Team' : 'Add Team'}</DialogTitle>
-                    {error && (
-                        <Typography color="error" sx={{mt: 1, ml: 2}}>{error}</Typography>
-                    )}
-                    <DialogContent>
-                        <TextField
-                            label="Name"
-                            value={formData.name}
-                            onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            fullWidth margin="dense" required
-                        />
-                        <TextField
-                            label="Description"
-                            value={formData.description}
-                            onChange={(e) => setFormData({...formData, description: e.target.value})}
-                            fullWidth margin="dense" multiline
-                        />
-                        <TextField
-                            label="Team Lead ID"
-                            value={formData.team_lead_id || ''}
-                            onChange={(e) => setFormData({...formData, team_lead_id: e.target.value})}
-                            fullWidth margin="dense" required
-                        />
-                        <FormControl fullWidth margin="dense">
-                            <InputLabel>Members</InputLabel>
-                            <Select
-                                multiple
-                                value={selectedMembers}
-                                onChange={(e) => setSelectedMembers(e.target.value as string[])}
-                                input={<OutlinedInput label="Members"/>}
-                                renderValue={(selected) =>
-                                    selected.map(id => {
-                                        const emp = employees.find(e => e.id === id);
-                                        return emp?.name || id;
-                                    }).join(', ')
-                                }
-                            >
-                                {employees.filter(emp => emp.is_active).map(emp => (
-                                    <MenuItem key={emp.id} value={emp.id}>
-                                        <Checkbox checked={selectedMembers.includes(emp.id)}/>
-                                        <ListItemText primary={emp.name}/>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button sx={{color: '#263238'}} onClick={() => setOpenDialog(false)}>Cancel</Button>
-                        <Button sx={{backgroundColor: '#263238'}} onClick={handleSubmit}
-                                variant="contained">Save</Button>
-                    </DialogActions>
-                </Dialog>
-
-                <Dialog open={deactivateDialogOpen} onClose={() => setDeactivateDialogOpen(false)}>
-                    <DialogTitle>Deactivate Team</DialogTitle>
-                    <DialogContent>
-                        <Typography>Are you sure you want to deactivate this team?</Typography>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setDeactivateDialogOpen(false)} color="primary">Cancel</Button>
-                        <Button onClick={handleDeactivate} color="secondary">Confirm</Button>
-                    </DialogActions>
-                </Dialog>
-            </Box>
-        </Layout>
+            <Dialog open={deactivateDialogOpen} onClose={() => setDeactivateDialogOpen(false)}>
+                <DialogTitle>Deactivate Team</DialogTitle>
+                <DialogContent>
+                    <Typography>Are you sure you want to deactivate this team?</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeactivateDialogOpen(false)} color="primary">Cancel</Button>
+                    <Button onClick={handleDeactivate} color="secondary">Confirm</Button>
+                </DialogActions>
+            </Dialog>
+        </Box>
     );
 };
 

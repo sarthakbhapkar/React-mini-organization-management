@@ -2,8 +2,6 @@ import React from 'react';
 import {Avatar, Box, Card, CardContent, List, ListItem, ListItemAvatar, ListItemText, Typography,} from '@mui/material';
 import {useAuth} from '../../../context/AuthContext.ts';
 import {useEmployees} from '../../../hooks/useEmployees.ts';
-import Layout from "../../../pages/Layout.tsx";
-import {Sidebar} from "../../../pages/Sidebar.tsx";
 import CenteredBox from "../../CardDesign.tsx";
 
 const TeamMembers: React.FC = () => {
@@ -27,38 +25,35 @@ const TeamMembers: React.FC = () => {
     );
 
     return (
-        <Layout>
-            <Sidebar role={user.role}/>
-            <Box sx={{flexGrow: 1}}>
-                <CenteredBox>
-                    <CardContent sx={{width: '100%', maxWidth: 600}}>
-                        <Typography variant="h6" gutterBottom>
-                            {user.role === 'TEAM_LEAD' ? 'Your Team Members' : 'Your Teammates'}
-                        </Typography>
+        <Box sx={{width:'100%'}}>
+            <CenteredBox>
+                <CardContent sx={{width: '100%', maxWidth: 600}}>
+                    <Typography variant="h6" gutterBottom>
+                        {user.role === 'TEAM_LEAD' ? 'Your Team Members' : 'Your Teammates'}
+                    </Typography>
 
-                        {teamMembers.length > 0 ? (
-                            <List>
-                                {teamMembers.map((member) => (
-                                    <ListItem key={member.id}>
-                                        <ListItemAvatar>
-                                            <Avatar src={member.profile_picture || undefined}>
-                                                {member.name[0]}
-                                            </Avatar>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            primary={member.name}
-                                            secondary={member.email}
-                                        />
-                                    </ListItem>
-                                ))}
-                            </List>
-                        ) : (
-                            <Typography variant="body2">No team members found.</Typography>
-                        )}
-                    </CardContent>
-                </CenteredBox>
-            </Box>
-        </Layout>
+                    {teamMembers.length > 0 ? (
+                        <List>
+                            {teamMembers.map((member) => (
+                                <ListItem key={member.id}>
+                                    <ListItemAvatar>
+                                        <Avatar src={member.profile_picture || undefined}>
+                                            {member.name[0]}
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary={member.name}
+                                        secondary={member.email}
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                    ) : (
+                        <Typography variant="body2">No team members found.</Typography>
+                    )}
+                </CardContent>
+            </CenteredBox>
+        </Box>
     );
 };
 

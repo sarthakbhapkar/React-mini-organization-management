@@ -3,8 +3,6 @@ import {Alert, Box, Button, MenuItem, Snackbar, TextField, Typography} from '@mu
 import {useAuth} from "../../../context/AuthContext.ts";
 import CenteredBox from "../../CardDesign.tsx";
 import type {LeaveType} from "../../../types";
-import {Sidebar} from "../../../pages/Sidebar.tsx";
-import Layout from "../../../pages/Layout.tsx";
 import {useLeaveForm} from "../hooks/useLeaveForm.ts";
 import LeaveNavbar from "./LeaveNavBar.tsx";
 
@@ -26,8 +24,6 @@ const LeaveApplication: React.FC = () => {
     const today = new Date().toISOString().split('T')[0];
 
     return (
-        <Layout>
-            <Sidebar role={user.role}/>
             <Box sx={{width: '100%'}}>
                 <LeaveNavbar />
                 <CenteredBox>
@@ -124,7 +120,6 @@ const LeaveApplication: React.FC = () => {
                     </Snackbar>
                 </CenteredBox>
             </Box>
-        </Layout>
     );
 };
 

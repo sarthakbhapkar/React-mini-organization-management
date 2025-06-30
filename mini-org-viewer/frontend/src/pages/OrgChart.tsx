@@ -1,14 +1,9 @@
-import {Sidebar} from "./Sidebar";
-import Layout from './Layout';
 import {useAuth} from '../context/AuthContext.ts';
 
-export default function OrgChart(){
+export default function OrgChart() {
     const {user} = useAuth();
-    if(!user) return;
+    if (!user) return;
     return (
-        <Layout>
-            <Sidebar role={user.role}/>
-            <h1>Under Maintenance</h1>
-        </Layout>
-    )
+        <h1>Under Maintenance</h1>
+    );
 }

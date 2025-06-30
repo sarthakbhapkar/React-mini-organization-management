@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-    Box,
-    Button, MenuItem, TextField,
-    Typography
-} from '@mui/material';
-import {Sidebar} from '../../../pages/Sidebar.tsx';
-import Layout from '../../../pages/Layout.tsx';
+import {Box, Button, MenuItem, TextField, Typography} from '@mui/material';
 import {useLeaveApproval} from "../hooks/useLeaveApproval.ts";
 import DataTable, {type Column} from "../../DataTable.tsx";
 import type {Leave} from "../../../types";
@@ -33,11 +27,11 @@ const LeaveApproval: React.FC = () => {
             render: (leave) =>
                 employees.find(e => e.id === leave.user_id)?.name || leave.user_id
         },
-        { label: 'Type', key: 'leave_type' },
-        { label: 'Start Date', key: 'start_date' },
-        { label: 'End Date', key: 'end_date' },
-        { label: 'Reason', key: 'reason' },
-        { label: 'Status', key: 'status' },
+        {label: 'Type', key: 'leave_type'},
+        {label: 'Start Date', key: 'start_date'},
+        {label: 'End Date', key: 'end_date'},
+        {label: 'Reason', key: 'reason'},
+        {label: 'Status', key: 'status'},
         {
             label: 'Actions',
             key: 'id',
@@ -59,31 +53,29 @@ const LeaveApproval: React.FC = () => {
     if (!user) return null;
 
     return (
-        <Layout>
-            <Sidebar role={user.role}/>
-            <Box sx={{ width:'100%'}}>
-                <LeaveNavbar />
-                <Box sx={{ padding: 3 }}>
+        <Box sx={{width: '100%'}}>
+            <LeaveNavbar/>
+            <Box sx={{padding: 3}}>
                 <Typography variant="h4" gutterBottom>
                     Leave Approvals
                 </Typography>
-                    <Box sx={{ display: 'flex', gap: 3, mb: 3, mt:3 }}>
-                        <TextField
-                            select
-                            label="Filter by Leave Type"
-                            value={selectedType}
-                            onChange={(e) => setSelectedType(e.target.value)}
-                            sx={{ width: 200 }}
-                            size="small"
-                        >
-                            <MenuItem value="ALL">All</MenuItem>
-                            <MenuItem value="SICK">Sick</MenuItem>
-                            <MenuItem value="CASUAL">Casual</MenuItem>
-                            <MenuItem value="WFH">Work From Home</MenuItem>
-                        </TextField>
-                    </Box>
+                <Box sx={{display: 'flex', gap: 3, mb: 3, mt: 3}}>
+                    <TextField
+                        select
+                        label="Filter by Leave Type"
+                        value={selectedType}
+                        onChange={(e) => setSelectedType(e.target.value)}
+                        sx={{width: 200}}
+                        size="small"
+                    >
+                        <MenuItem value="ALL">All</MenuItem>
+                        <MenuItem value="SICK">Sick</MenuItem>
+                        <MenuItem value="CASUAL">Casual</MenuItem>
+                        <MenuItem value="WFH">Work From Home</MenuItem>
+                    </TextField>
+                </Box>
 
-                    <DataTable
+                <DataTable
                     columns={columns}
                     rows={paginatedLeaves}
                     loading={loading}
@@ -91,9 +83,8 @@ const LeaveApproval: React.FC = () => {
                     totalPages={totalPages}
                     onPageChange={setPage}
                 />
-                </Box>
             </Box>
-        </Layout>
+        </Box>
     );
 };
 

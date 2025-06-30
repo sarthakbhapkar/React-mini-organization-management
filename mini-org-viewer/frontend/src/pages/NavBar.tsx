@@ -8,6 +8,11 @@ import BusinessIcon from '@mui/icons-material/Business';
 const Navbar: React.FC = () => {
     const {logout} = useAuth();
     const navigate = useNavigate();
+
+    const handleLogout=()=>{
+        logout()
+        navigate('/login');
+    }
     return (
         <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1, backgroundColor: '#37474F',}}>
             <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
@@ -27,7 +32,7 @@ const Navbar: React.FC = () => {
                     Mini Organization Viewer
                 </Typography>
 
-                <Button variant="outlined" color="inherit" onClick={logout} sx={{backgroundColor: '#263238'}}
+                <Button variant="outlined" color="inherit" onClick={handleLogout} sx={{backgroundColor: '#263238'}}
                         startIcon={<LogoutIcon/>}>
                     Logout
                 </Button>
