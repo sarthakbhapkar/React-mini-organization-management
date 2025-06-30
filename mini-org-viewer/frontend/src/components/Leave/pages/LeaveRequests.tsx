@@ -33,7 +33,31 @@ const LeaveRequests: React.FC = () => {
         {label: 'Start Date', key: 'start_date'},
         {label: 'End Date', key: 'end_date'},
         {label: 'Reason', key: 'reason'},
-        {label: 'Status', key: 'status'},
+        {
+            label: 'Status',
+            key: 'status',
+            render: (row) => (
+                <Box
+                    sx={{
+                        backgroundColor:
+                            row.status === 'APPROVED'
+                                ? '#C8E6C9'
+                                : row.status === 'REJECTED'
+                                    ? '#FFCDD2'
+                                    : '#ECEFF1',
+                        color: '#000',
+                        borderRadius: 1,
+                        px: 1.5,
+                        py: 0.5,
+                        display: 'inline-block',
+                        textAlign: 'center',
+                        minWidth: 90,
+                    }}
+                >
+                    {row.status}
+                </Box>
+            )
+        },
         {
             label: 'Requested On',
             key: 'created_at',

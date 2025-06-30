@@ -43,7 +43,7 @@ export const useLeaveForm = () => {
         const available = getAvailableBalance();
 
         return daysRequested > available
-            ? `Not enough ${type} leave balance.`
+            ? `Not enough ${type} leave balance.You have only ${available} day(s) left.`
             : null;
     };
 

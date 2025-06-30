@@ -43,7 +43,7 @@ function DataTable<T>({
                     <TableHead>
                         <TableRow>
                             {columns.map((col) => (
-                                <TableCell key={col.label} align={col.align || 'left'}>
+                                <TableCell key={col.label} align={col.align || 'left'} sx={{ fontWeight: 'bold' }}>
                                     {col.label}
                                 </TableCell>
                             ))}

@@ -63,9 +63,9 @@ const LeaveApplication: React.FC = () => {
                         }}
                         fullWidth
                         margin="normal"
-                        focused
                         required
                         slotProps={{
+                            inputLabel:{shrink:true},
                             input: {
                                 inputProps: {
                                     min: today
@@ -85,9 +85,9 @@ const LeaveApplication: React.FC = () => {
                         }}
                         fullWidth
                         margin="normal"
-                        focused
                         required
                         slotProps={{
+                            inputLabel:{shrink:true},
                             input: {
                                 inputProps: {
                                     min: today
