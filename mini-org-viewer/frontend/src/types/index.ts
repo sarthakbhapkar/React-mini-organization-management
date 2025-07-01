@@ -46,12 +46,42 @@ export interface User {
     is_active: boolean;
 }
 
+export interface TeamMember {
+    id: string;
+    name: string;
+    email: string;
+}
+
+export interface TeamWithLead {
+    team_id: string;
+    team_name: string;
+    team_lead: TeamMember | null;
+    members: TeamMember[];
+}
+
+export interface Organization {
+    name: string;
+    total_employees: number;
+    total_teams: number;
+}
+
+export interface OrgData {
+    organization: Organization;
+    hierarchy: TeamWithLead[];
+}
+
+export interface OrgApiResponse {
+    success: boolean;
+    data: OrgData;
+}
+
 export interface Team{
     id: string;
     name: string;
     description?: string;
     team_lead_id: string;
     is_active: boolean;
+    members: TeamMember[];
 }
 
 export interface AuthContextType {

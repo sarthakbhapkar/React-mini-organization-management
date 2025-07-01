@@ -8,7 +8,7 @@ import Profile from "../components/Profile/pages/Profile.tsx";
 import UserManagement from "../components/User/pages/UserManagement.tsx";
 import TeamManagement from "../components/Team/pages/TeamManagement.tsx";
 import LeaveApproval from "../components/Leave/pages/LeaveApproval.tsx";
-import OrgChart from "../pages/OrgChart";
+import OrgChart from "../components/OrgChart/pages/OrgChart.tsx";
 import LeaveRequests from "../components/Leave/pages/LeaveRequests.tsx";
 import LeavePolicy from "../components/Leave/pages/LeavePolicy.tsx";
 import LeaveBalance from "../components/Leave/pages/LeaveBalance.tsx";

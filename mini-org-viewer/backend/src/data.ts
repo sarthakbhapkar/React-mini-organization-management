@@ -33,6 +33,7 @@ export const users: User[] = [
         role: 'MEMBER',
         team_id: "team-001",
         join_date: '2023-12-01',
+        reports_to: 'tl1',
         is_active: true,
         created_at: '2023-12-01T00:00:00Z',
         updated_at: '2023-12-01T00:00:00Z'
@@ -55,6 +56,7 @@ export const users: User[] = [
         password_hash: bcrypt.hashSync('emp123', 10),
         role: 'MEMBER',
         team_id: "team-002",
+        reports_to: 'tl2',
         join_date: '2023-12-01',
         is_active: true,
         created_at: '2023-12-01T00:00:00Z',
