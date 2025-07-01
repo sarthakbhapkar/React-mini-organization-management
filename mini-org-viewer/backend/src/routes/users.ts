@@ -8,7 +8,7 @@ const router = express.Router();
 
 // GET /api/users
 router.get('/', authenticateToken, (req: AuthRequest, res) => {
-  const { page = '1', limit = '10', search, team_id, role } = req.query;
+  const { page = '1', limit = '5', search, team_id, role } = req.query;
   
   let filteredUsers = users.filter(user => {
     if (search && !user.name.toLowerCase().includes(search.toString().toLowerCase()) && 

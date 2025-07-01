@@ -16,7 +16,6 @@ export function useUserForm() {
     const [search, setSearch] = useState('');
     const debouncedSearch = useDebounce(search, 500);
     const { page, limit, totalPages, setPage, updateTotal } = usePagination();
-    const { employees, loading, reFetch, total } = useEmployees(page, limit);
 
     const [openDialog, setOpenDialog] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -26,6 +25,14 @@ export function useUserForm() {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [selectedRole, setSelectedRole] = useState<string>('ALL');
     const [teamOptions, setTeamOptions] = useState<{ id: string, name: string, lead_id: string, lead_name: string }[]>([]);
+    const { employees, loading, reFetch, total } = useEmployees(page, limit,{
+        search: debouncedSearch,
+        role: selectedRole,
+    });
+
+    useEffect(() => {
+        setPage(1);
+    }, [debouncedSearch, selectedRole]);
 
     useEffect(() => {
         if (!token) return;
@@ -66,12 +73,6 @@ export function useUserForm() {
     useEffect(() => {
         updateTotal(total);
     }, [total]);
-
-    const filteredUsers = employees.filter((u) => {
-        const matchesSearch = u.name.toLowerCase().includes(debouncedSearch.toLowerCase());
-        const matchesRole = selectedRole === 'ALL' || u.role === selectedRole;
-        return matchesSearch && matchesRole;
-    });
 
     const handleOpenAdd = () => {
         setEditMode(false);
@@ -158,7 +159,6 @@ export function useUserForm() {
         totalPages,
         setPage,
         employees,
-        filteredUsers,
         loading,
         reFetch,
         openDialog,

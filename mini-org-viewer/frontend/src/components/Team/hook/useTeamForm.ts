@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { api } from '../../../utils/api';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { usePagination } from '../../../hooks/usePagination';
@@ -38,6 +38,10 @@ export const useTeamForm = () => {
     });
 
     const paginatedTeams = filteredTeams.slice((page - 1) * limit, page * limit);
+
+    useEffect(() => {
+        updateTotal(filteredTeams.length);
+    }, [filteredTeams]);
 
     const handleOpenAdd = () => {
         setEditMode(false);

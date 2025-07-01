@@ -26,8 +26,8 @@ const UserManagement: React.FC = () => {
         openDialog, setOpenDialog, editMode, formData, setFormData,
         deactivateDialogOpen, setDeactivateDialogOpen, setSelectedId,
         handleOpenAdd, handleEdit, handleSubmit, handleDeactivate,
-        page, totalPages, setPage, filteredUsers, openSnackbar, setOpenSnackbar, error,
-        selectedRole, setSelectedRole, teamOptions
+        page, totalPages, setPage,  openSnackbar, setOpenSnackbar, error,
+        selectedRole, setSelectedRole, teamOptions, employees
     } = useUserForm();
 
     const columns: Column<User>[] = [
@@ -95,7 +95,7 @@ const UserManagement: React.FC = () => {
 
             <DataTable
                 columns={columns}
-                rows={filteredUsers}
+                rows={employees}
                 loading={loading}
                 page={page}
                 totalPages={totalPages}

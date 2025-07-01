@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 
 export function usePagination(initialPage = 1, itemsPerPage = 5) {
     const [page, setPage] = useState(initialPage);
@@ -10,6 +10,12 @@ export function usePagination(initialPage = 1, itemsPerPage = 5) {
     const updateTotal = (total: number) => {
         setTotalItems(total);
     };
+
+    useEffect(() => {
+        if (page > totalPages) {
+            setPage(Math.max(1, totalPages));
+        }
+    }, [page, totalPages]);
 
     return {
         page,
