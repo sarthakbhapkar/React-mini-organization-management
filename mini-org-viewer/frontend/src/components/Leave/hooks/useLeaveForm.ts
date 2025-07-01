@@ -14,7 +14,7 @@ const leaveTypeToPolicyKey = {
 
 export const useLeaveForm = () => {
     const { user, token } = useAuth();
-    const { requests } = useLeaveRequest();
+    const { requests } = useLeaveRequest(true);
     const { policy } = useLeavePolicy();
 
     const [leave, setLeave] = useState<LeaveFormState>({

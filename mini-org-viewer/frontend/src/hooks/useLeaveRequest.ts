@@ -3,22 +3,38 @@ import { api } from '../utils/api';
 import type { Leave } from '../types';
 import { useAuth } from '../context/AuthContext.ts';
 
-export function useLeaveRequest() {
-    const { token } = useAuth();
+export function useLeaveRequest(forBalance = false) {
+    const { user, token } = useAuth();
     const [requests, setRequests] = useState<Leave[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<null | string>(null);
 
-    const LeaveReqs =  async () => {
-        if (!token) return;
-        api.get<{ data: Leave[] }>('/api/leave/requests', token)
-            .then(res => setRequests(res.data.data))
-            .catch(err => setError('Failed to fetch leave requests: ' + err.message))
-            .finally(() => setLoading(false));
-    }
-    useEffect(() => {
-        LeaveReqs().then();
-    }, []);
+    const fetchRequests = async () => {
+        if (!token || !user) return;
 
-    return { requests, loading, error, reFetch: LeaveReqs };
+        let url = '/api/leave/requests';
+        if (forBalance) {
+            url += `?user_id=${user.id}`;
+        }
+
+        try {
+            const res = await api.get<{ data: Leave[] }>(url, token);
+            setRequests(res.data.data);
+        } catch (err: any) {
+            setError('Failed to fetch leave requests: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchRequests().then();
+    }, [token, user?.id]);
+
+    return {
+        requests,
+        loading,
+        error,
+        reFetch: fetchRequests
+    };
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../utils/api';  // Assuming you have a helper for API requests
+import { api } from '../utils/api';
 import type { User } from '../types';
 
 type EmployeesResponse = {
