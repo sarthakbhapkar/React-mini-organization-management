@@ -3,6 +3,7 @@ import ReactFlow, {Controls, type Edge, MiniMap, type Node,} from 'reactflow';
 import 'reactflow/dist/style.css';
 import {useOrgChart} from '../hooks/useOrgChart';
 import type {TeamMember} from '../../../types';
+import {Box} from "@mui/material";
 
 const OrgChart: React.FC = () => {
     const {orgData, loading, error} = useOrgChart();
@@ -80,19 +81,19 @@ const OrgChart: React.FC = () => {
     });
 
     return (
-        <div style={{height: '90vh', width: '100%', marginTop: '0px'}}>
-            <ReactFlow nodes={nodes} edges={edges} fitView
-                       panOnDrag={false}
-                       zoomOnScroll={false}
-                       zoomOnPinch={false}
-                       panOnScroll={false}
-                       nodesDraggable={false}
-                       nodesConnectable={false}>
-                <MiniMap/>
-                <Controls/>
-            </ReactFlow>
-        </div>
-    );
+
+    <Box sx={{ width: '100%', mt: { xs: 2, sm: 4 } }}>
+        <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            fitView
+        >
+            <MiniMap />
+            <Controls />
+        </ReactFlow>
+    </Box>
+
+);
 };
 
 export default OrgChart;

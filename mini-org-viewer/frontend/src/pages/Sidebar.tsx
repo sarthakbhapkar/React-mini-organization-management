@@ -26,7 +26,7 @@ export const Sidebar = ({ role }: { role: 'MEMBER' | 'TEAM_LEAD' | 'ADMIN' }) =>
     };
 
     return (
-        <List sx={{ width: 240, backgroundColor: '#263238', minHeight: '90vh', color: 'white' }}>
+        <List sx={{ width: 240, backgroundColor: '#263238', minHeight: '710px', color: 'white' }}>
             {role !== 'ADMIN' && (
                 <ListItem disablePadding>
                     <ListItemButton component={NavLink} to="/team-members" sx={navItemStyles}>

@@ -18,7 +18,7 @@ const LeavePolicy: React.FC = () => {
     if (!user) return null;
 
     return (
-        <Box sx={{width: '100%'}}>
+        <Box sx={{width: '100%', height:'100%'}}>
             <LeaveNavbar/>
             <CenteredBox>
                 <Typography variant="h5" gutterBottom>

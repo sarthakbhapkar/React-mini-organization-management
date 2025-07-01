@@ -4,8 +4,10 @@ import {useProfileForm} from '../hook/useProfile.ts';
 import {useLeaveBalance} from "../../Leave/hooks/useLeaveBalance.ts";
 import {useTeams} from "../../../hooks/useTeams.ts";
 import EditIcon from "@mui/icons-material/Edit";
+import {useAuth} from "../../../context/AuthContext.ts";
 
 const Profile: React.FC = () => {
+    const {refreshUser} = useAuth();
     const {
         user,
         name,
@@ -25,6 +27,12 @@ const Profile: React.FC = () => {
     if (!user) return null;
     const team = teams.find(t => t.id === user.team_id);
 
+    const handleClick = () =>{
+        handleUpdate().then();
+        refreshUser().then();
+        setEditMode(false);
+    }
+
     const handleCancel = () => {
         setName(user.name);
         setPassword('');
@@ -32,7 +40,7 @@ const Profile: React.FC = () => {
     };
 
     return (
-        <Box sx={{padding: 4, width: '100%'}}>
+        <Box sx={{padding: { xs: 2, md: 4 }, width: '100%'}}>
             <Typography variant="h4" gutterBottom><strong>Profile Overview</strong></Typography>
 
             <Grid container spacing={3} sx={{mt: 7}}>
@@ -67,7 +75,7 @@ const Profile: React.FC = () => {
                 </Grid>
 
                 <Grid size={{xs: 12, md: 8}}>
-                    <Card sx={{height: '100%', width: '50%', ml: 10}}>
+                    <Card sx={{height: '100%', width: '100%'}}>
                         <CardContent>
                             <Typography variant="h5" gutterBottom><strong>Basic Info</strong></Typography>
                             {error && (
@@ -109,7 +117,7 @@ const Profile: React.FC = () => {
                                 {editMode ? (
                                     <>
                                         <Button variant="contained" sx={{mr: 2, backgroundColor: '#263238'}}
-                                                onClick={handleUpdate}>
+                                                onClick={handleClick}>
                                             Save
                                         </Button>
                                         <Button variant="outlined" color="secondary" onClick={handleCancel}>

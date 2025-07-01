@@ -3,17 +3,11 @@ import {
     Alert,
     Box,
     Button,
-    Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    FormControl,
-    InputLabel,
-    ListItemText,
     MenuItem,
-    OutlinedInput,
-    Select,
     Snackbar,
     TextField,
     Typography
@@ -29,15 +23,12 @@ import type {Column} from "../../DataTable.tsx";
 const TeamManagement: React.FC = () => {
     const {
         user,
-        employees,
         loading,
         search,
         setSearch,
         openDialog,
         setOpenDialog,
         editMode,
-        selectedMembers,
-        setSelectedMembers,
         formData,
         setFormData,
         handleOpenAdd,
@@ -167,28 +158,6 @@ const TeamManagement: React.FC = () => {
                         onChange={(e) => setFormData({...formData, team_lead_id: e.target.value})}
                         fullWidth margin="dense" required
                     />
-                    <FormControl fullWidth margin="dense">
-                        <InputLabel>Members</InputLabel>
-                        <Select
-                            multiple
-                            value={selectedMembers}
-                            onChange={(e) => setSelectedMembers(e.target.value as string[])}
-                            input={<OutlinedInput label="Members"/>}
-                            renderValue={(selected) =>
-                                selected.map(id => {
-                                    const emp = employees.find(e => e.id === id);
-                                    return emp?.name || id;
-                                }).join(', ')
-                            }
-                        >
-                            {employees.filter(emp => emp.is_active).map(emp => (
-                                <MenuItem key={emp.id} value={emp.id}>
-                                    <Checkbox checked={selectedMembers.includes(emp.id)}/>
-                                    <ListItemText primary={emp.name}/>
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button sx={{color: '#263238'}} onClick={() => setOpenDialog(false)}>Cancel</Button>

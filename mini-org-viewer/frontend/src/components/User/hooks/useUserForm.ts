@@ -4,6 +4,12 @@ import { useAuth } from '../../../context/AuthContext.ts';
 import { useEmployees } from '../../../hooks/useEmployees';
 import { useDebounce } from '../../../hooks/useDebounce';
 import { usePagination } from '../../../hooks/usePagination';
+import type {Team} from "../../../types";
+
+type EmployeesResponse = {
+    success: boolean;
+    data: Team[];
+};
 
 export function useUserForm() {
     const { user, token } = useAuth();
@@ -19,6 +25,33 @@ export function useUserForm() {
     const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [selectedRole, setSelectedRole] = useState<string>('ALL');
+    const [teamOptions, setTeamOptions] = useState<{ id: string, name: string, lead_id: string, lead_name: string }[]>([]);
+
+    useEffect(() => {
+        if (!token) return;
+
+        const fetchTeams = async () => {
+            try {
+                const res = await api.get<EmployeesResponse>('/api/teams', token);
+                const teams = res.data.data;
+
+                const formatted = teams
+                    .filter((t: any) => t.is_active)
+                    .map((t: any) => ({
+                        id: t.id,
+                        name: t.name,
+                        lead_id: t.team_lead_id,
+                        lead_name: t.team_lead_name
+                    }));
+
+                setTeamOptions(formatted);
+            } catch (err) {
+                console.error('Failed to load team options', err);
+            }
+        };
+
+        fetchTeams();
+    }, [token]);
 
     const [formData, setFormData] = useState({
         id: '',
@@ -27,6 +60,7 @@ export function useUserForm() {
         password: '',
         role: 'MEMBER',
         is_active: true,
+        reports_to:''
     });
 
     useEffect(() => {
@@ -41,13 +75,13 @@ export function useUserForm() {
 
     const handleOpenAdd = () => {
         setEditMode(false);
-        setFormData({ id: '', name: '', email: '', password: '', role: 'MEMBER', is_active: true });
+        setFormData({ id: '', name: '', email: '', password: '', role: 'MEMBER', is_active: true, reports_to: '' });
         setOpenDialog(true);
     };
 
     const handleEdit = (emp: any) => {
         setEditMode(true);
-        setFormData({ ...emp, password: '' });
+        setFormData({ ...emp, password: '', reports_to: emp.reports_to || '' });
         setOpenDialog(true);
         reFetch().then();
     };
@@ -69,6 +103,17 @@ export function useUserForm() {
                 }
                 setError(null);
                 await api.put(`/api/users/${id}`, data, token);
+
+                if (data.reports_to) {
+                    const teamId = teamOptions.find(t => t.lead_id === data.reports_to)?.id;
+
+                    if (teamId) {
+                        await api.post(`/api/teams/${teamId}/members`, {
+                            user_id: id,
+                            reports_to:data.reports_to
+                        }, token);
+                    }
+                }
             } else {
                 if (!data.name || !data.email || !data.password || !data.role) {
                     setError('All Fields are required');
@@ -136,6 +181,7 @@ export function useUserForm() {
         handleSubmit,
         handleDeactivate,
         selectedRole,
-        setSelectedRole
+        setSelectedRole,
+        teamOptions
     };
 }

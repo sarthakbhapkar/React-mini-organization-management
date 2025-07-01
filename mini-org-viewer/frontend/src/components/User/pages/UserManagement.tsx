@@ -27,7 +27,7 @@ const UserManagement: React.FC = () => {
         deactivateDialogOpen, setDeactivateDialogOpen, setSelectedId,
         handleOpenAdd, handleEdit, handleSubmit, handleDeactivate,
         page, totalPages, setPage, filteredUsers, openSnackbar, setOpenSnackbar, error,
-        selectedRole, setSelectedRole
+        selectedRole, setSelectedRole, teamOptions
     } = useUserForm();
 
     const columns: Column<User>[] = [
@@ -147,6 +147,24 @@ const UserManagement: React.FC = () => {
                         <MenuItem value="TEAM_LEAD">Team Lead</MenuItem>
                         <MenuItem value="ADMIN">Admin</MenuItem>
                     </TextField>
+
+                    {editMode && formData.role === 'MEMBER' &&
+                        <TextField
+                            select
+                            label="Reports To (Team Lead)"
+                            value={formData.reports_to}
+                            onChange={(e) => setFormData({...formData, reports_to: e.target.value})}
+                            fullWidth
+                            margin="dense"
+                        >
+                            {teamOptions.map((team) => (
+                                <MenuItem key={team.lead_id} value={team.lead_id}>
+                                    {team.name} — {team.lead_name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    }
+
                 </DialogContent>
                 <DialogActions>
                     <Button sx={{color: '#263238'}} onClick={() => setOpenDialog(false)}>Cancel</Button>

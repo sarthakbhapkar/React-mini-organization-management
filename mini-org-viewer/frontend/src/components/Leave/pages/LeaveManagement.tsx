@@ -9,7 +9,7 @@ const LeaveManagement: React.FC = () => {
     if (!user) return null;
 
     return (
-        <Box sx={{width: '100%'}}>
+        <Box sx={{height:'100%',width: '100%'}}>
             <LeaveNavbar/>
             <Box sx={{
                 minHeight: '80vh',

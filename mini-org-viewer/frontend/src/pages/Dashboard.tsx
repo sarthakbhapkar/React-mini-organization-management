@@ -13,12 +13,12 @@ const Dashboard: React.FC = () => {
     if (!user) return null;
 
     return (
-        <Box sx={{width:'100%', p: 3}}>
+        <Box sx={{height:'100%',width: '100%', p: {xs: 2, md: 6, sm: 3}}}>
             <Typography variant="h4" gutterBottom>
                 Welcome, {user.name}
             </Typography>
             <Grid container spacing={3}>
-                <Grid size={{xs: 12, sm: 4}}>
+                <Grid size={{xs: 12, md: 4, sm: 6}}>
                     <Card>
                         <CardContent>
                             <Typography variant="h6">Total Employees</Typography>
@@ -28,7 +28,7 @@ const Dashboard: React.FC = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{xs: 12, sm: 4}}>
+                <Grid size={{xs: 12, md: 4, sm: 6}}>
                     <Card>
                         <CardContent>
                             <Typography variant="h6">Total Teams</Typography>
@@ -38,7 +38,7 @@ const Dashboard: React.FC = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid size={{xs: 12, sm: 4}}>
+                <Grid size={{xs: 12, md: 4, sm: 6}}>
                     <Card sx={{color: '#008080'}}>
                         <CardContent>
                             <Typography variant="h6">Good Afternoon {user.name}</Typography>
