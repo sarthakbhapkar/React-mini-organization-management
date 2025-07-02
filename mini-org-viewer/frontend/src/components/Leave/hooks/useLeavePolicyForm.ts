@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { useLeavePolicy } from '../../../hooks/useLeavePolicy';
-import { useAuth } from '../../../context/AuthContext.ts';
-import { api } from '../../../utils/api';
+import {useState} from 'react';
+import {useLeavePolicy} from '../../../hooks/useLeavePolicy';
+import {useAuth} from '../../../context/AuthContext.ts';
+import {api} from '../../../utils/api';
 
 export const useLeavePolicyForm = () => {
-    const { policy, setPolicy } = useLeavePolicy();
-    const { token } = useAuth();
+    const {policy, setPolicy} = useLeavePolicy();
+    const {token} = useAuth();
     const [snackOpen, setSnackOpen] = useState(false);
 
     const handleChange = (key: keyof typeof policy, value: number) => {
-        setPolicy({ ...policy, [key]: value });
+        setPolicy({...policy, [key]: value});
     };
 
     const handleSave = async () => {

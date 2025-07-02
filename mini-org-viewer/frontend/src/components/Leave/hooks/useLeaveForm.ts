@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { calculateUsedLeaves } from '../utils/LeaveUtils';
-import type { LeaveFormState, LeaveType, PostLeaveRequest } from '../../../types';
-import { api } from '../../../utils/api';
-import { useLeaveRequest } from '../../../hooks/useLeaveRequest';
-import { useLeavePolicy } from '../../../hooks/useLeavePolicy';
-import { useAuth } from "../../../context/AuthContext.ts";
+import {useState} from 'react';
+import {calculateUsedLeaves} from '../utils/LeaveUtils';
+import type {LeaveFormState, LeaveType, PostLeaveRequest} from '../../../types';
+import {api} from '../../../utils/api';
+import {useLeaveRequest} from '../../../hooks/useLeaveRequest';
+import {useLeavePolicy} from '../../../hooks/useLeavePolicy';
+import {useAuth} from "../../../context/AuthContext.ts";
 
 const leaveTypeToPolicyKey = {
     SICK: 'sick_leave',
@@ -13,9 +13,9 @@ const leaveTypeToPolicyKey = {
 } as const;
 
 export const useLeaveForm = () => {
-    const { user, token } = useAuth();
-    const { requests } = useLeaveRequest(true);
-    const { policy } = useLeavePolicy();
+    const {user, token} = useAuth();
+    const {requests} = useLeaveRequest(true);
+    const {policy} = useLeavePolicy();
 
     const [leave, setLeave] = useState<LeaveFormState>({
         type: 'SICK',
@@ -79,7 +79,7 @@ export const useLeaveForm = () => {
             }, token);
 
             setOpenSnackbar(true);
-            setLeave({ type: 'SICK', startDate: '', endDate: '', reason: '' });
+            setLeave({type: 'SICK', startDate: '', endDate: '', reason: ''});
             setError(null);
         } catch (err: unknown) {
             console.error('Leave request failed:', err);

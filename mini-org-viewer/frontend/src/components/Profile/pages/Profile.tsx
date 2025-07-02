@@ -27,11 +27,11 @@ const Profile: React.FC = () => {
     if (!user) return null;
     const team = teams.find(t => t.id === user.team_id);
 
-    const handleClick = () =>{
+    const handleClick = () => {
         handleUpdate().then();
         refreshUser().then();
         setEditMode(false);
-    }
+    };
 
     const handleCancel = () => {
         setName(user.name);
@@ -40,7 +40,7 @@ const Profile: React.FC = () => {
     };
 
     return (
-        <Box sx={{padding: { xs: 2, md: 4 }, width: '100%',marginLeft: {xs:'160px',sm:'240px'}}}>
+        <Box sx={{padding: {xs: 2, md: 4}, width: '100%', marginLeft: {xs: '160px', sm: '240px'}}}>
             <Typography variant="h4" gutterBottom><strong>Profile Overview</strong></Typography>
 
             <Grid container spacing={3} sx={{mt: 7}}>

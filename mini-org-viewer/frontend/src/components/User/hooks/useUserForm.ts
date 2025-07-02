@@ -31,6 +31,15 @@ export function useUserForm() {
         role: selectedRole,
     });
     const {teams} = useTeams();
+    const [formData, setFormData] = useState({
+        id: '',
+        name: '',
+        email: '',
+        password: '',
+        role: 'MEMBER',
+        is_active: true,
+        reports_to: ''
+    });
 
     useEffect(() => {
         setPage(1);
@@ -48,16 +57,6 @@ export function useUserForm() {
 
         setTeamOptions(formatted);
     }, [teams]);
-
-    const [formData, setFormData] = useState({
-        id: '',
-        name: '',
-        email: '',
-        password: '',
-        role: 'MEMBER',
-        is_active: true,
-        reports_to: ''
-    });
 
     useEffect(() => {
         updateTotal(total);

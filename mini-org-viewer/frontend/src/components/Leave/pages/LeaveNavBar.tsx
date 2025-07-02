@@ -1,19 +1,18 @@
 import React from 'react';
-import { AppBar, Toolbar, Button } from '@mui/material';
-import { NavLink, useLocation } from 'react-router-dom';
+import {AppBar, Button, Toolbar} from '@mui/material';
+import {NavLink} from 'react-router-dom';
 import {useAuth} from "../../../context/AuthContext.ts";
 
 const LeaveNavbar: React.FC = () => {
-    const location = useLocation();
     const {user} = useAuth();
     if (!user) return null;
 
     const navItems = [
-        { label: 'Apply Leave', path: '/leave/leave-apply',roles: ['TEAM_LEAD', 'MEMBER']  },
-        { label: 'Leave Balance', path: '/leave/leave-balance',roles: ['TEAM_LEAD', 'MEMBER'] },
-        { label: 'Leave Requests', path: '/leave/leave-requests',roles: ['ADMIN', 'TEAM_LEAD', 'MEMBER'] },
-        { label: 'Leave Approvals', path: '/leave/leave-approval',roles: ['TEAM_LEAD'] },
-        { label: 'Leave Policy', path: '/leave/leave-policies',roles: ['ADMIN'] }
+        {label: 'Apply Leave', path: '/leave/leave-apply', roles: ['TEAM_LEAD', 'MEMBER']},
+        {label: 'Leave Balance', path: '/leave/leave-balance', roles: ['TEAM_LEAD', 'MEMBER']},
+        {label: 'Leave Requests', path: '/leave/leave-requests', roles: ['ADMIN', 'TEAM_LEAD', 'MEMBER']},
+        {label: 'Leave Approvals', path: '/leave/leave-approval', roles: ['TEAM_LEAD']},
+        {label: 'Leave Policy', path: '/leave/leave-policies', roles: ['ADMIN']}
     ];
 
     const visibleItems = navItems.filter(item => item.roles.includes(user.role));
@@ -21,10 +20,15 @@ const LeaveNavbar: React.FC = () => {
     return (
         <AppBar
             position="static"
-            sx={{ backgroundColor: '#37474F', borderBottom: '1px solid #ccc', zIndex: (theme) => theme.zIndex.drawer + 1, width:'100%' }}
+            sx={{
+                backgroundColor: '#37474F',
+                borderBottom: '1px solid #ccc',
+                zIndex: (theme) => theme.zIndex.drawer + 1,
+                width: '100%'
+            }}
             elevation={0}
         >
-            <Toolbar variant="dense" sx={{ gap: 2 }}>
+            <Toolbar variant="dense" sx={{gap: 2}}>
                 {visibleItems.map((item) => (
                     <Button
                         key={item.path}
@@ -39,7 +43,6 @@ const LeaveNavbar: React.FC = () => {
                             textTransform: 'none',
                             '&:hover': {backgroundColor: '#263238'}
                         }}
-                        className={location.pathname === item.path ? 'active' : ''}
                     >
                         {item.label}
                     </Button>

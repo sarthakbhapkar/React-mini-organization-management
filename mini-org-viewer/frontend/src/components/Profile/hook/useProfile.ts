@@ -1,9 +1,9 @@
 import {useEffect, useState} from 'react';
-import { useAuth } from '../../../context/AuthContext.ts';
-import { api } from '../../../utils/api';
+import {useAuth} from '../../../context/AuthContext.ts';
+import {api} from '../../../utils/api';
 
 export const useProfileForm = () => {
-    const { user, token} = useAuth();
+    const {user, token} = useAuth();
 
     const [name, setName] = useState(user?.name || '');
     const [password, setPassword] = useState('');
