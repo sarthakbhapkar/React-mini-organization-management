@@ -4,9 +4,11 @@ import 'reactflow/dist/style.css';
 import {useOrgChart} from '../hooks/useOrgChart';
 import type {TeamMember} from '../../../types';
 import {Box} from "@mui/material";
+import {useAuth} from "../../../context/AuthContext.ts";
 
 const OrgChart: React.FC = () => {
     const {orgData, loading, error} = useOrgChart();
+    const { user } = useAuth();
 
     if (loading) return <p>Loading Org Chart...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -55,6 +57,7 @@ const OrgChart: React.FC = () => {
                 data: {label: `👨‍💼 ${team.team_lead.name}`},
                 position: {x: baseX, y: leadY},
                 type: 'default',
+                style: team.team_lead.id === user?.id ? { border: '2px solid #1976d2', backgroundColor: '#e3f2fd' } : {},
             });
 
             edges.push({
@@ -71,6 +74,7 @@ const OrgChart: React.FC = () => {
                     data: {label: `👤 ${member.name}`},
                     position: {x: baseX + j * memberSpacing, y: memberY},
                     type: 'default',
+                    style: member.id === user?.id ? { border: '2px solid #388e3c', backgroundColor: '#e8f5e9' } : {},
                 });
 
                 edges.push({
