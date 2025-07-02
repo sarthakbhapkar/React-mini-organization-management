@@ -39,20 +39,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.removeItem('token');
     };
 
-    const refreshUser = async () => {
-        if (!token || !user) return;
-        try {
-            const res = await axios.get(`${API_BASE}/api/users/${user.id}`,{
-                headers: { authorization: `Bearer ${token}` },
-            });
-            setUser(res.data.data);
-        } catch (err) {
-            console.error('Failed to refresh user:', err);
-        }
-    };
-
     return (
-        <AuthContext.Provider value={{ user, token, login, logout, refreshUser }}>
+        <AuthContext.Provider value={{ user, token, login, logout}}>
             {children}
         </AuthContext.Provider>
     );

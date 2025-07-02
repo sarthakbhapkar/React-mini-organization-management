@@ -4,10 +4,8 @@ import {useProfileForm} from '../hook/useProfile.ts';
 import {useLeaveBalance} from "../../Leave/hooks/useLeaveBalance.ts";
 import {useTeams} from "../../../hooks/useTeams.ts";
 import EditIcon from "@mui/icons-material/Edit";
-import {useAuth} from "../../../context/AuthContext.ts";
 
 const Profile: React.FC = () => {
-    const {refreshUser} = useAuth();
     const {
         user,
         name,
@@ -28,8 +26,7 @@ const Profile: React.FC = () => {
     const team = teams.find(t => t.id === user.team_id);
 
     const handleClick = () => {
-        handleUpdate().then();
-        refreshUser().then();
+        handleUpdate();
         setEditMode(false);
     };
 
