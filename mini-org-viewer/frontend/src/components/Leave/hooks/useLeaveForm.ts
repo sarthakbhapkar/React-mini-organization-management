@@ -5,6 +5,7 @@ import {api} from '../../../utils/api';
 import {useLeaveRequest} from '../../../hooks/useLeaveRequest';
 import {useLeavePolicy} from '../../../hooks/useLeavePolicy';
 import {useAuth} from "../../../context/AuthContext.ts";
+import { useNavigate } from 'react-router-dom';
 
 const leaveTypeToPolicyKey = {
     SICK: 'sick_leave',
@@ -16,6 +17,7 @@ export const useLeaveForm = () => {
     const {user, token} = useAuth();
     const {requests} = useLeaveRequest(true);
     const {policy} = useLeavePolicy();
+    const navigate = useNavigate();
 
     const [leave, setLeave] = useState<LeaveFormState>({
         type: 'SICK',
@@ -81,6 +83,7 @@ export const useLeaveForm = () => {
             setOpenSnackbar(true);
             setLeave({type: 'SICK', startDate: '', endDate: '', reason: ''});
             setError(null);
+            navigate('/leave/leave-requests');
         } catch (err: unknown) {
             console.error('Leave request failed:', err);
         }
