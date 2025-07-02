@@ -45,7 +45,8 @@ const TeamManagement: React.FC = () => {
         page,
         setPage,
         filteredTeams,
-        setSelectedStatus, selectedStatus
+        setSelectedStatus, selectedStatus,
+        availableTeamLeads
     } = useTeamForm();
 
     const columns: Column<Team>[] = [
@@ -93,7 +94,7 @@ const TeamManagement: React.FC = () => {
     if (!user) return null;
 
     return (
-        <Box sx={{width: '100%', padding: 3, paddingTop: 1, marginLeft: {xs:'160px',sm:'240px'}}}>
+        <Box sx={{width: '100%', padding: 3, paddingTop: 1, marginLeft: {xs: '160px', sm: '240px'}}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                 <Typography variant="h4" sx={{mb: 2, ml: 2, mt: 2}}>Team Management</Typography>
                 <Button color="secondary" variant="contained" startIcon={<GroupAddIcon/>} onClick={handleOpenAdd}
@@ -159,11 +160,21 @@ const TeamManagement: React.FC = () => {
                         fullWidth margin="dense" multiline
                     />
                     <TextField
-                        label="Team Lead ID"
+                        select
+                        label="Select Team Lead"
                         value={formData.team_lead_id || ''}
                         onChange={(e) => setFormData({...formData, team_lead_id: e.target.value})}
                         fullWidth margin="dense" required
-                    />
+                    >
+                        {availableTeamLeads.map((lead) => (
+                            <MenuItem key={lead.id} value={lead.id}>
+                                {lead.name} ({lead.email})
+                            </MenuItem>
+                        ))}
+                        {availableTeamLeads.length === 0 && (
+                            <MenuItem disabled>No available team leads</MenuItem>
+                        )}
+                    </TextField>
                 </DialogContent>
                 <DialogActions>
                     <Button sx={{color: '#263238'}} onClick={() => setOpenDialog(false)}>Cancel</Button>

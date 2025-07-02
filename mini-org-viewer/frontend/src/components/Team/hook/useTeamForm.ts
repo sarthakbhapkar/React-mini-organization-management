@@ -43,6 +43,26 @@ export const useTeamForm = () => {
         updateTotal(filteredTeams.length);
     }, [filteredTeams]);
 
+    const assignedTeamLeadIds = teams
+        .filter((team) => team.team_lead_id)
+        .map((team) => team.team_lead_id);
+
+    const unassignedTeamLeads = employees.filter(
+        (emp) =>
+            emp.role === 'TEAM_LEAD' &&
+            !assignedTeamLeadIds.includes(emp.id)
+    );
+
+    const availableTeamLeads = editMode && formData.team_lead_id
+        ? [
+            ...unassignedTeamLeads,
+            ...employees.filter(
+                (emp) => emp.id === formData.team_lead_id && emp.role === 'TEAM_LEAD'
+            )
+        ]
+        : unassignedTeamLeads;
+
+
     const handleOpenAdd = () => {
         setEditMode(false);
         setFormData({ id: '', name: '', description: '', team_lead_id: '', is_active: true });
@@ -140,6 +160,7 @@ export const useTeamForm = () => {
         paginatedTeams,
         filteredTeams,
         setSelectedStatus,
-        selectedStatus
+        selectedStatus,
+        availableTeamLeads
     };
 };
