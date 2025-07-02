@@ -81,6 +81,7 @@ export interface Team{
     description?: string;
     team_lead_id: string;
     is_active: boolean;
+    team_lead_name: string;
     members: TeamMember[];
 }
 

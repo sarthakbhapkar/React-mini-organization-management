@@ -20,8 +20,12 @@ export function useLeaveRequest(forBalance = false) {
         try {
             const res = await api.get<{ data: Leave[] }>(url, token);
             setRequests(res.data.data);
-        } catch (err: any) {
-            setError('Failed to fetch leave requests: ' + err.message);
+        } catch (err: unknown) {
+            if(err instanceof Error) {
+                setError('Failed to fetch leave requests: ' + err.message);
+            }
+            setError('Failed to fetch leave requests');
+
         } finally {
             setLoading(false);
         }

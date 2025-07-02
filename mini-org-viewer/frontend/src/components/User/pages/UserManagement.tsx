@@ -6,7 +6,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle,
+    DialogTitle, IconButton,
     MenuItem,
     Snackbar,
     TextField,
@@ -45,17 +45,21 @@ const UserManagement: React.FC = () => {
             key: 'id',
             align: 'center',
             render: (emp) => (
-                <>
-                    <Button onClick={() => handleEdit(emp)} sx={{mr: 1}} startIcon={<EditIcon/>}/>
-                    <Button
-                        color="error"
+                <Box display="flex" justifyContent="center" alignItems="center" gap={4}>
+                    <IconButton onClick={() => handleEdit(emp)} size="small" color="primary">
+                        <EditIcon/>
+                    </IconButton>
+                    <IconButton
                         onClick={() => {
                             setSelectedId(emp.id);
                             setDeactivateDialogOpen(true);
                         }}
-                        startIcon={<DeleteIcon/>}
-                    />
-                </>
+                        color="error"
+                        size="small"
+                    >
+                        <DeleteIcon/>
+                    </IconButton>
+                </Box>
             )
         }
     ];

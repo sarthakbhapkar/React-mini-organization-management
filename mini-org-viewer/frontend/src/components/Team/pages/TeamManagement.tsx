@@ -7,6 +7,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    IconButton,
     MenuItem,
     Snackbar,
     TextField,
@@ -65,17 +66,22 @@ const TeamManagement: React.FC = () => {
             key: 'id',
             align: 'center',
             render: (row: Team) => (
-                <>
-                    <Button onClick={() => handleEdit(row)} startIcon={<EditIcon/>} sx={{mr: 1}}/>
-                    <Button
-                        color="error"
+                <Box display="flex" justifyContent="center" alignItems="center" gap={4}>
+                    <IconButton onClick={() => handleEdit(row)} size="small" color="primary">
+                        <EditIcon/>
+                    </IconButton>
+                    <IconButton
                         onClick={() => {
                             setSelectedId(row.id);
                             setDeactivateDialogOpen(true);
                         }}
-                        startIcon={<DeleteIcon/>}
-                    />
-                </>
+                        color="error"
+                        size="small"
+                        disabled={!row.is_active}
+                    >
+                        <DeleteIcon/>
+                    </IconButton>
+                </Box>
             )
         }
     ];

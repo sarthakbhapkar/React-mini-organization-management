@@ -1,21 +1,17 @@
-import { useState, useEffect } from 'react';
-import { api } from '../../../utils/api';
-import { useAuth } from '../../../context/AuthContext.ts';
-import { useEmployees } from '../../../hooks/useEmployees';
-import { useDebounce } from '../../../hooks/useDebounce';
-import { usePagination } from '../../../hooks/usePagination';
+import {useEffect, useState} from 'react';
+import {api} from '../../../utils/api';
+import {useAuth} from '../../../context/AuthContext.ts';
+import {useEmployees} from '../../../hooks/useEmployees';
+import {useDebounce} from '../../../hooks/useDebounce';
+import {usePagination} from '../../../hooks/usePagination';
+import {useTeams} from "../../../hooks/useTeams.ts";
 import type {Team} from "../../../types";
 
-type EmployeesResponse = {
-    success: boolean;
-    data: Team[];
-};
-
 export function useUserForm() {
-    const { user, token } = useAuth();
+    const {user, token} = useAuth();
     const [search, setSearch] = useState('');
     const debouncedSearch = useDebounce(search, 500);
-    const { page, limit, totalPages, setPage, updateTotal } = usePagination();
+    const {page, limit, totalPages, setPage, updateTotal} = usePagination();
 
     const [openDialog, setOpenDialog] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -24,41 +20,34 @@ export function useUserForm() {
     const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [selectedRole, setSelectedRole] = useState<string>('ALL');
-    const [teamOptions, setTeamOptions] = useState<{ id: string, name: string, lead_id: string, lead_name: string }[]>([]);
-    const { employees, loading, reFetch, total } = useEmployees(page, limit,{
+    const [teamOptions, setTeamOptions] = useState<{
+        id: string,
+        name: string,
+        lead_id: string,
+        lead_name: string
+    }[]>([]);
+    const {employees, loading, reFetch, total} = useEmployees(page, limit, {
         search: debouncedSearch,
         role: selectedRole,
     });
+    const {teams} = useTeams();
 
     useEffect(() => {
         setPage(1);
     }, [debouncedSearch, selectedRole]);
 
     useEffect(() => {
-        if (!token) return;
+        const formatted = teams
+            .filter((t: Team) => t.is_active)
+            .map((t: Team) => ({
+                id: t.id,
+                name: t.name,
+                lead_id: t.team_lead_id,
+                lead_name: t.team_lead_name
+            }));
 
-        const fetchTeams = async () => {
-            try {
-                const res = await api.get<EmployeesResponse>('/api/teams', token);
-                const teams = res.data.data;
-
-                const formatted = teams
-                    .filter((t: any) => t.is_active)
-                    .map((t: any) => ({
-                        id: t.id,
-                        name: t.name,
-                        lead_id: t.team_lead_id,
-                        lead_name: t.team_lead_name
-                    }));
-
-                setTeamOptions(formatted);
-            } catch (err) {
-                console.error('Failed to load team options', err);
-            }
-        };
-
-        fetchTeams();
-    }, [token]);
+        setTeamOptions(formatted);
+    }, [teams]);
 
     const [formData, setFormData] = useState({
         id: '',
@@ -67,7 +56,7 @@ export function useUserForm() {
         password: '',
         role: 'MEMBER',
         is_active: true,
-        reports_to:''
+        reports_to: ''
     });
 
     useEffect(() => {
@@ -76,13 +65,13 @@ export function useUserForm() {
 
     const handleOpenAdd = () => {
         setEditMode(false);
-        setFormData({ id: '', name: '', email: '', password: '', role: 'MEMBER', is_active: true, reports_to: '' });
+        setFormData({id: '', name: '', email: '', password: '', role: 'MEMBER', is_active: true, reports_to: ''});
         setOpenDialog(true);
     };
 
     const handleEdit = (emp: any) => {
         setEditMode(true);
-        setFormData({ ...emp, password: '', reports_to: emp.reports_to || '' });
+        setFormData({...emp, password: '', reports_to: emp.reports_to || ''});
         setOpenDialog(true);
         reFetch().then();
     };
@@ -95,7 +84,7 @@ export function useUserForm() {
 
     const handleSubmit = async () => {
         if (!token) return;
-        const { id, ...data } = formData;
+        const {id, ...data} = formData;
         try {
             if (editMode) {
                 if (!data.name) {
@@ -111,7 +100,7 @@ export function useUserForm() {
                     if (teamId) {
                         await api.post(`/api/teams/${teamId}/members`, {
                             user_id: id,
-                            reports_to:data.reports_to
+                            reports_to: data.reports_to
                         }, token);
                     }
                 }
@@ -139,7 +128,7 @@ export function useUserForm() {
         if (!employee) return;
 
         try {
-            await api.put(`/api/users/${selectedId}`, { ...employee, is_active: false }, token);
+            await api.put(`/api/users/${selectedId}`, {...employee, is_active: false}, token);
             setDeactivateDialogOpen(false);
             setSelectedId(null);
             reFetch();
