@@ -59,8 +59,9 @@ const TeamManagement: React.FC = () => {
         },
         {
             label: 'Team Lead',
-            key: 'team_lead_id',
-            align: 'center'
+            key: 'team_lead_name',
+            align: 'center',
+            render: (row: Team) => row.team_lead_name || '—'
         },
         {
             label: 'Actions',
