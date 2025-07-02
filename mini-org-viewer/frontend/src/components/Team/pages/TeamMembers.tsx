@@ -25,7 +25,7 @@ const TeamMembers: React.FC = () => {
     );
 
     return (
-        <Box sx={{width:'100%'}}>
+        <Box sx={{width:'100%',marginLeft: {xs:'160px',sm:'240px'}}}>
             <CenteredBox>
                 <CardContent sx={{width: '100%', maxWidth: 600}}>
                     <Typography variant="h6" gutterBottom>

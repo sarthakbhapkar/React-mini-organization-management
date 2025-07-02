@@ -3,7 +3,6 @@ import {Alert, Box, Button, Snackbar, TextField, Typography} from '@mui/material
 import {useAuth} from '../../../context/AuthContext.ts';
 import CenteredBox from "../../CardDesign.tsx";
 import {useLeavePolicyForm} from "../hooks/useLeavePolicyForm.ts";
-import LeaveNavbar from "./LeaveNavBar.tsx";
 
 const LeavePolicy: React.FC = () => {
     const {user} = useAuth();
@@ -18,8 +17,7 @@ const LeavePolicy: React.FC = () => {
     if (!user) return null;
 
     return (
-        <Box sx={{width: '100%', height:'100%'}}>
-            <LeaveNavbar/>
+        <Box sx={{width: '100%'}}>
             <CenteredBox>
                 <Typography variant="h5" gutterBottom>
                     Leave Policy Settings

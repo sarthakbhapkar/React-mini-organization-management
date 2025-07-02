@@ -15,23 +15,28 @@ import LeaveBalance from "../components/Leave/pages/LeaveBalance.tsx";
 import TeamMembers from "../components/Team/pages/TeamMembers.tsx";
 import LeaveManagement from "../components/Leave/pages/LeaveManagement.tsx";
 import MainLayout from "../pages/MainLayout.tsx";
+import LeaveLayout from "../components/Leave/pages/LeaveLayout.tsx";
 
 const AppRoutes: React.FC = () => {
     return (
         <Routes>
             <Route path="/" element={<MainLayout/>}>
                 <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
-                <Route path="/leave-apply" element={<ProtectedRoute><LeaveApplication/></ProtectedRoute>}/>
                 <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
                 <Route path="/users" element={<AdminRoute> <UserManagement/> </AdminRoute>}/>
                 <Route path="/teams" element={<AdminRoute> <TeamManagement/> </AdminRoute>}/>
-                <Route path="/leave-approval" element={<TeamLeadRoute> <LeaveApproval/> </TeamLeadRoute>}/>
                 <Route path="/org-chart" element={<ProtectedRoute> <OrgChart/> </ProtectedRoute>}/>
-                <Route path="/leave-requests" element={<ProtectedRoute> <LeaveRequests/> </ProtectedRoute>}/>
-                <Route path="/leave-policies" element={<AdminRoute> <LeavePolicy/> </AdminRoute>}/>
-                <Route path="/leave-balance" element={<ProtectedRoute> <LeaveBalance/> </ProtectedRoute>}/>
                 <Route path="/team-members" element={<ProtectedRoute><TeamMembers/> </ProtectedRoute>}/>
                 <Route path="/leave-management" element={<ProtectedRoute><LeaveManagement/></ProtectedRoute>}/>
+
+                <Route path="/leave" element={<LeaveLayout />}>
+                    <Route path="leave-apply" element={<ProtectedRoute><LeaveApplication/></ProtectedRoute>} />
+                    <Route path="leave-balance" element={<ProtectedRoute><LeaveBalance/></ProtectedRoute>} />
+                    <Route path="leave-requests" element={<ProtectedRoute><LeaveRequests/></ProtectedRoute>} />
+                    <Route path="leave-approval" element={<TeamLeadRoute><LeaveApproval/></TeamLeadRoute>} />
+                    <Route path="leave-policies" element={<AdminRoute><LeavePolicy/></AdminRoute>} />
+                </Route>
+
                 <Route path="*" element={<Navigate to="/dashboard"/>}/>
             </Route>
             <Route path="/login" element={<Login/>}/>

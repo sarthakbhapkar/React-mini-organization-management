@@ -25,8 +25,11 @@ const OrgChart: React.FC = () => {
 
     const edges: Edge[] = [];
 
+    const baseSpacing = window.innerWidth < 600 ? 120 : 250;
+    const memberSpacing = window.innerWidth < 600 ? 60 : 80;
+
     hierarchy.forEach((team, i) => {
-        const baseX = 250 * i;
+        const baseX = baseSpacing * i;
         const teamY = 150;
         const leadY = 250;
         const memberY = 350;
@@ -66,7 +69,7 @@ const OrgChart: React.FC = () => {
                 nodes.push({
                     id: memberId,
                     data: {label: `👤 ${member.name}`},
-                    position: {x: baseX + j * 80, y: memberY},
+                    position: {x: baseX + j * memberSpacing, y: memberY},
                     type: 'default',
                 });
 
@@ -82,11 +85,14 @@ const OrgChart: React.FC = () => {
 
     return (
 
-    <Box sx={{ width: '100%', mt: { xs: 2, sm: 4 } }}>
+    <Box sx={{ width: '100%', height: '80vh',
+        mt: { xs: 2, sm: 4 },
+        ml: { xs: 160, sm: '240px' },overflow: 'auto',overflowY: 'hidden'}}>
         <ReactFlow
             nodes={nodes}
             edges={edges}
             fitView
+            fitViewOptions={{ padding: 0.2 }}
         >
             <MiniMap />
             <Controls />

@@ -9,11 +9,11 @@ const LeaveNavbar: React.FC = () => {
     if (!user) return null;
 
     const navItems = [
-        { label: 'Apply Leave', path: '/leave-apply',roles: ['TEAM_LEAD', 'MEMBER']  },
-        { label: 'Leave Balance', path: '/leave-balance',roles: ['TEAM_LEAD', 'MEMBER'] },
-        { label: 'Leave Requests', path: '/leave-requests',roles: ['ADMIN', 'TEAM_LEAD', 'MEMBER'] },
-        { label: 'Leave Approvals', path: '/leave-approval',roles: ['TEAM_LEAD'] },
-        { label: 'Leave Policy', path: '/leave-policies',roles: ['ADMIN'] }
+        { label: 'Apply Leave', path: '/leave/leave-apply',roles: ['TEAM_LEAD', 'MEMBER']  },
+        { label: 'Leave Balance', path: '/leave/leave-balance',roles: ['TEAM_LEAD', 'MEMBER'] },
+        { label: 'Leave Requests', path: '/leave/leave-requests',roles: ['ADMIN', 'TEAM_LEAD', 'MEMBER'] },
+        { label: 'Leave Approvals', path: '/leave/leave-approval',roles: ['TEAM_LEAD'] },
+        { label: 'Leave Policy', path: '/leave/leave-policies',roles: ['ADMIN'] }
     ];
 
     const visibleItems = navItems.filter(item => item.roles.includes(user.role));
@@ -21,7 +21,7 @@ const LeaveNavbar: React.FC = () => {
     return (
         <AppBar
             position="static"
-            sx={{ backgroundColor: '#37474F', borderBottom: '1px solid #ccc' }}
+            sx={{ backgroundColor: '#37474F', borderBottom: '1px solid #ccc', zIndex: (theme) => theme.zIndex.drawer + 1, width:'100%' }}
             elevation={0}
         >
             <Toolbar variant="dense" sx={{ gap: 2 }}>

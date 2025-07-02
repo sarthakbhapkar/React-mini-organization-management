@@ -3,7 +3,6 @@ import {Box, Button, MenuItem, TextField, Typography} from '@mui/material';
 import {useLeaveApproval} from "../hooks/useLeaveApproval.ts";
 import DataTable, {type Column} from "../../DataTable.tsx";
 import type {Leave} from "../../../types";
-import LeaveNavbar from "./LeaveNavBar.tsx";
 
 const LeaveApproval: React.FC = () => {
     const {
@@ -54,8 +53,7 @@ const LeaveApproval: React.FC = () => {
 
     return (
         <Box sx={{width: '100%'}}>
-            <LeaveNavbar/>
-            <Box sx={{padding: 3}}>
+            <Box sx={{padding: 2}}>
                 <Typography variant="h4" gutterBottom>
                     Leave Approvals
                 </Typography>

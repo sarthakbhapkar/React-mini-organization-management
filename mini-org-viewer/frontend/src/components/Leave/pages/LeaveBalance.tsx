@@ -1,6 +1,5 @@
 import {Box, Card, CardContent, Grid, Typography} from "@mui/material";
 import {useLeaveBalance} from "../hooks/useLeaveBalance.ts";
-import LeaveNavbar from "./LeaveNavBar.tsx";
 
 export default function LeaveBalance() {
 
@@ -13,8 +12,7 @@ export default function LeaveBalance() {
     }
 
     return (
-            <Box sx={{ width:'100%'}}>
-                <LeaveNavbar />
+            <Box sx={{width: '100%'}}>
                 <Box sx={{ padding: 3 }}>
                 <Typography variant="h4">Available Leave Balance</Typography>
             <Grid container spacing={3} sx={{ mt: 2 }}>

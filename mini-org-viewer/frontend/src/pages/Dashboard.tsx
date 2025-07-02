@@ -13,7 +13,7 @@ const Dashboard: React.FC = () => {
     if (!user) return null;
 
     return (
-        <Box sx={{height:'100%',width: '100%', p: {xs: 2, md: 6, sm: 3}}}>
+        <Box sx={{height:'100%',width: '100%', p: {xs: 2, md: 6, sm: 3}, marginLeft: {xs:'160px',sm:'240px'}}}>
             <Typography variant="h4" gutterBottom>
                 Welcome, {user.name}
             </Typography>

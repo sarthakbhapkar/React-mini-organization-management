@@ -93,7 +93,7 @@ const TeamManagement: React.FC = () => {
     if (!user) return null;
 
     return (
-        <Box sx={{width: '100%', padding: 3, paddingTop: 1}}>
+        <Box sx={{width: '100%', padding: 3, paddingTop: 1, marginLeft: {xs:'160px',sm:'240px'}}}>
             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                 <Typography variant="h4" sx={{mb: 2, ml: 2, mt: 2}}>Team Management</Typography>
                 <Button color="secondary" variant="contained" startIcon={<GroupAddIcon/>} onClick={handleOpenAdd}

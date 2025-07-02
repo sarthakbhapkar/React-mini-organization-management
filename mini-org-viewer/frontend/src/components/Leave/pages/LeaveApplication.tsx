@@ -4,7 +4,6 @@ import {useAuth} from "../../../context/AuthContext.ts";
 import CenteredBox from "../../CardDesign.tsx";
 import type {LeaveType} from "../../../types";
 import {useLeaveForm} from "../hooks/useLeaveForm.ts";
-import LeaveNavbar from "./LeaveNavBar.tsx";
 
 const LeaveApplication: React.FC = () => {
 
@@ -25,7 +24,6 @@ const LeaveApplication: React.FC = () => {
 
     return (
             <Box sx={{width: '100%'}}>
-                <LeaveNavbar />
                 <CenteredBox>
                     <Typography variant="h4" gutterBottom>Apply for Leave</Typography>
                     {error && (
