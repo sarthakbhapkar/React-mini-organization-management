@@ -92,4 +92,12 @@ export interface AuthContextType {
     logout: () => void;
 }
 
+export interface LeaveFilter {
+    status?: string;
+    user_id?: string;
+    leave_type?: string;
+    start_date?: string;
+    end_date?: string;
+}
+
 

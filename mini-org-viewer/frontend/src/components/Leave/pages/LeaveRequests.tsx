@@ -9,22 +9,23 @@ import type {Leave} from '../../../types';
 
 const LeaveRequests: React.FC = () => {
     const {user} = useAuth();
-    const {requests, loading} = useLeaveRequest();
     const {page, limit, totalPages, setPage, updateTotal} = usePagination();
     const [selectedStatus, setSelectedStatus] = useState('ALL');
     const [selectedType, setSelectedType] = useState('ALL');
-
-    const filteredRequests = requests.filter((req) => {
-        const statusMatch = selectedStatus === 'ALL' || req.status === selectedStatus;
-        const typeMatch = selectedType === 'ALL' || req.leave_type === selectedType;
-        return statusMatch && typeMatch;
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const { requests, loading } = useLeaveRequest(false, {
+        status: selectedStatus,
+        leave_type: selectedType,
+        start_date: startDate,
+        end_date: endDate
     });
 
-    const paginatedRequests = filteredRequests.slice((page - 1) * limit, page * limit);
+    const paginatedRequests = requests.slice((page - 1) * limit, page * limit);
 
     useEffect(() => {
-        updateTotal(filteredRequests.length);
-    }, [filteredRequests]);
+        updateTotal(requests.length);
+    }, [requests]);
 
     const columns: Column<Leave>[] = [
         {label: 'Employee ID', key: 'user_id'},
@@ -103,6 +104,28 @@ const LeaveRequests: React.FC = () => {
                         <MenuItem value="CASUAL">Casual</MenuItem>
                         <MenuItem value="WFH">Work From Home</MenuItem>
                     </TextField>
+
+                    <TextField
+                        label="Start Date"
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        slotProps={{
+                            inputLabel: {shrink: true},
+                        }}
+                        sx={{ width: 200 }}
+                    />
+
+                    <TextField
+                        label="End Date"
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        slotProps={{
+                            inputLabel: {shrink: true},
+                        }}
+                        sx={{ width: 200 }}
+                    />
                 </Box>
 
                 <DataTable
