@@ -90,6 +90,7 @@ export interface AuthContextType {
     token: string | null;
     login: (email: string, password: string) => Promise<void>;
     logout: () => void;
+    setUser: (user: User | null) => void;
 }
 
 export interface LeaveFilter {

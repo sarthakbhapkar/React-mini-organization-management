@@ -1,18 +1,28 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useAuth} from '../../../context/AuthContext.ts';
 import {api} from '../../../utils/api';
+import type {User} from "../../../types";
+
+interface ApiResponse {
+    success: boolean;
+    data: User;
+    message: string;
+}
+
+interface UserUpdatePayload {
+    name: string;
+    password?: string;
+    role: string;
+    is_active: boolean;
+}
 
 export const useProfileForm = () => {
-    const {user, token} = useAuth();
+    const {user, token, setUser} = useAuth();
 
     const [name, setName] = useState(user?.name || '');
     const [password, setPassword] = useState('');
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (user?.name) setName(user.name);
-    }, [user?.name]);
 
     const handleUpdate = async () => {
         if (!user || !token) return;
@@ -28,12 +38,15 @@ export const useProfileForm = () => {
         }
 
         try {
-            await api.put(`/api/users/${user.id}`, {
+            const res = await api.put<UserUpdatePayload, ApiResponse>(`/api/users/${user.id}`, {
                 name: name.trim(),
                 password: password || undefined,
                 role: user.role,
                 is_active: true,
             }, token);
+
+            setUser(res.data.data);
+
             setError(null);
             setOpenSnackbar(true);
         } catch (err: unknown) {

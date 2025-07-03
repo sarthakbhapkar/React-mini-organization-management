@@ -13,8 +13,8 @@ export const api = {
             headers: { Authorization: `Bearer ${token}`},
         }),
 
-    put: <T>(url: string, data?: T, token?: string | null) =>
-        axios.put<T>(`${API_BASE}${url}`, data, {
+    put: <T,U>(url: string, data?: T, token?: string | null) : Promise<{ data: U}> =>
+        axios.put<U>(`${API_BASE}${url}`, data, {
             headers: { Authorization: `Bearer ${token}`},
         })
 };
