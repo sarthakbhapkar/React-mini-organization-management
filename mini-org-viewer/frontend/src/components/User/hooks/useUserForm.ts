@@ -5,7 +5,7 @@ import {useEmployees} from '../../../hooks/useEmployees';
 import {useDebounce} from '../../../hooks/useDebounce';
 import {usePagination} from '../../../hooks/usePagination';
 import {useTeams} from "../../../hooks/useTeams.ts";
-import type {Team} from "../../../types";
+import type {Team, User} from "../../../types";
 
 export function useUserForm() {
     const {user, token} = useAuth();
@@ -68,7 +68,7 @@ export function useUserForm() {
         setOpenDialog(true);
     };
 
-    const handleEdit = (emp: any) => {
+    const handleEdit = (emp: User) => {
         setEditMode(true);
         setFormData({...emp, password: '', reports_to: emp.reports_to || ''});
         setOpenDialog(true);

@@ -15,12 +15,15 @@ export const useLeaveManagement = () => {
 
     const isApprover = user?.role === 'TEAM_LEAD';
 
-    const {requests, loading, reFetch} = useLeaveRequest(false, {
+    const filters = {
         status: selectedStatus,
         leave_type: selectedType,
         start_date: startDate,
-        end_date: endDate
-    });
+        end_date: endDate,
+        ...(user?.role === 'MEMBER' ? { user_id: user.id } : {})
+    };
+
+    const {requests, loading, reFetch} = useLeaveRequest(false, filters);
 
     const handleApprove = async (id: string) => {
         await api.put(`/api/leave/requests/${id}/approve`, {}, token);

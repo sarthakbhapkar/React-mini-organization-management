@@ -6,15 +6,13 @@ import { calculateUsedLeaves } from '../utils/LeaveUtils';
 export const useLeaveBalance = () => {
     const { user } = useAuth();
     const { policy, loading: loadingPolicy } = useLeavePolicy();
-    const { requests, loading: loadingRequests } = useLeaveRequest();
+    const { requests, loading: loadingRequests } = useLeaveRequest(false, {
+        user_id: user?.id
+    });
 
     const loading = loadingPolicy || loadingRequests;
 
-    const myRequests = user
-        ? requests.filter(req => req.user_id === user.id)
-        : [];
-
-    const used = calculateUsedLeaves(myRequests);
+    const used = calculateUsedLeaves(requests);
 
     const balance = {
         sick_leave: policy.sick_leave - used.SICK,
