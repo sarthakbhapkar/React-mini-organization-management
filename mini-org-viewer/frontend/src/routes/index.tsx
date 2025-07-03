@@ -16,6 +16,7 @@ import TeamMembers from "../components/Team/pages/TeamMembers.tsx";
 import LeaveManagement from "../components/Leave/pages/LeaveManagement.tsx";
 import MainLayout from "../pages/MainLayout.tsx";
 import LeaveLayout from "../components/Leave/pages/LeaveLayout.tsx";
+import LeaveManagement2 from "../components/Leave/pages/LeaveCommon.tsx";
 
 const AppRoutes: React.FC = () => {
     return (
@@ -35,6 +36,7 @@ const AppRoutes: React.FC = () => {
                     <Route path="leave-requests" element={<ProtectedRoute><LeaveRequests/></ProtectedRoute>} />
                     <Route path="leave-approval" element={<TeamLeadRoute><LeaveApproval/></TeamLeadRoute>} />
                     <Route path="leave-policies" element={<AdminRoute><LeavePolicy/></AdminRoute>} />
+                    <Route path="requests" element={<ProtectedRoute><LeaveManagement2/></ProtectedRoute>} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/dashboard"/>}/>

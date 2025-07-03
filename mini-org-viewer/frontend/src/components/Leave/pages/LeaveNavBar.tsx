@@ -10,8 +10,7 @@ const LeaveNavbar: React.FC = () => {
     const navItems = [
         {label: 'Apply Leave', path: '/leave/leave-apply', roles: ['TEAM_LEAD', 'MEMBER']},
         {label: 'Leave Balance', path: '/leave/leave-balance', roles: ['TEAM_LEAD', 'MEMBER']},
-        {label: 'Leave Requests', path: '/leave/leave-requests', roles: ['ADMIN', 'TEAM_LEAD', 'MEMBER']},
-        {label: 'Leave Approvals', path: '/leave/leave-approval', roles: ['TEAM_LEAD']},
+        {label: 'Leave Requests', path: '/leave/requests', roles: ['ADMIN', 'TEAM_LEAD', 'MEMBER']},
         {label: 'Leave Policy', path: '/leave/leave-policies', roles: ['ADMIN']}
     ];
 

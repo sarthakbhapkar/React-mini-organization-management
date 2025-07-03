@@ -14,7 +14,7 @@ export function useLeaveRequest(forBalance = false, filters: LeaveFilter = {}) {
 
         const query: string[] = [];
 
-        if (forBalance) query.push(`user_id=${(user.id)}`);
+        if (forBalance || user.role==='MEMBER') query.push(`user_id=${(user.id)}`);
         if (filters.status && filters.status !== 'ALL') query.push(`status=${(filters.status)}`);
         if (filters.leave_type && filters.leave_type !== 'ALL') query.push(`leave_type=${(filters.leave_type)}`);
         if (filters.start_date) query.push(`start_date=${(filters.start_date)}`);
