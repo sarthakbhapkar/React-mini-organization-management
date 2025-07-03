@@ -1,11 +1,11 @@
 import {useState} from 'react';
-import {calculateUsedLeaves} from '../utils/LeaveUtils';
+import {calculateUsedLeaves, countWeekdays, isWeekend} from '../utils/LeaveUtils';
 import type {LeaveFormState, LeaveType, PostLeaveRequest} from '../../../types';
 import {api} from '../../../utils/api';
 import {useLeaveRequest} from '../../../hooks/useLeaveRequest';
 import {useLeavePolicy} from '../../../hooks/useLeavePolicy';
 import {useAuth} from "../../../context/AuthContext.ts";
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 const leaveTypeToPolicyKey = {
     SICK: 'sick_leave',
@@ -39,8 +39,14 @@ export const useLeaveForm = () => {
     const validateLeaveBalance = (type: LeaveType, start: string, end: string): string | null => {
         if (!start || !end) return null;
 
-        const daysRequested =
-            (new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24) + 1;
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+
+        if (isWeekend(startDate) || isWeekend(endDate)) {
+            return 'Cannot apply leave starting or ending on Saturday or Sunday.';
+        }
+
+        const daysRequested = countWeekdays(start, end);
 
         const available = getAvailableBalance();
 
@@ -61,14 +67,39 @@ export const useLeaveForm = () => {
             setError('End date cannot be before Start date.');
             return;
         }
+        const startDate = new Date(leave.startDate);
+        const endDate = new Date(leave.endDate);
 
-        const daysRequested =
-            (new Date(leave.endDate).getTime() - new Date(leave.startDate).getTime()) / (1000 * 60 * 60 * 24) + 1;
+        if (startDate > endDate) {
+            setError('End date cannot be before Start date.');
+            return;
+        }
+
+        if (isWeekend(startDate) || isWeekend(endDate)) {
+            setError('Cannot apply leave starting or ending on Saturday or Sunday.');
+            return;
+        }
+
+        const daysRequested = countWeekdays(leave.startDate, leave.endDate);
 
         const availableBalance = getAvailableBalance();
 
         if (daysRequested > availableBalance) {
             setError(`Not enough ${leave.type} leave balance. You have only ${availableBalance} day(s) left.`);
+            return;
+        }
+
+        const existingOverlap = requests.some(req => {
+            const reqStart = new Date(req.start_date);
+            const reqEnd = new Date(req.end_date);
+            return (
+                (startDate <= reqEnd && endDate >= reqStart) &&
+                req.status !== 'REJECTED'
+            );
+        });
+
+        if (existingOverlap) {
+            setError('You already have a leave applied during the selected dates.');
             return;
         }
 
