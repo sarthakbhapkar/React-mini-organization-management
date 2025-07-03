@@ -2,7 +2,7 @@ import React from 'react';
 import {
     Alert,
     Box,
-    Button,
+    Button, Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -20,6 +20,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DataTable from '../../DataTable';
 import type {Team} from '../../../types';
 import type {Column} from "../../DataTable.tsx";
+import {useTeamMembers} from '../hook/useMembers.ts';
 
 const TeamManagement: React.FC = () => {
     const {
@@ -49,6 +50,8 @@ const TeamManagement: React.FC = () => {
         availableTeamLeads
     } = useTeamForm();
 
+    const {members} = useTeamMembers(editMode ? formData.id : null);
+
     const columns: Column<Team>[] = [
         {label: 'Name', key: 'name'},
         {label: 'Description', key: 'description'},
@@ -69,7 +72,7 @@ const TeamManagement: React.FC = () => {
             align: 'center',
             render: (row: Team) => (
                 <Box display="flex" justifyContent="center" alignItems="center" gap={4}>
-                    <IconButton onClick={() => handleEdit(row)} size="small" color="primary">
+                    <IconButton onClick={() => handleEdit(row)} size="small" color="primary" disabled={!row.is_active}>
                         <EditIcon/>
                     </IconButton>
                     <IconButton
@@ -176,6 +179,24 @@ const TeamManagement: React.FC = () => {
                             <MenuItem disabled>No available team leads</MenuItem>
                         )}
                     </TextField>
+
+                    {editMode && (
+                        <>
+                            <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>Team Members</Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                                {members.map((member) => (
+                                    <Chip
+                                        key={member.id}
+                                        label={`${member.name} (${member.role})`}
+                                        variant="outlined"
+                                    />
+                                ))}
+                                {members.length === 0 && (
+                                    <Typography color="textSecondary">No team members found.</Typography>
+                                )}
+                            </Box>
+                        </>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button sx={{color: '#263238'}} onClick={() => setOpenDialog(false)}>Cancel</Button>
