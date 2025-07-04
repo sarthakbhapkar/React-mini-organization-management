@@ -5,6 +5,7 @@ import { usePagination } from '../../../hooks/usePagination';
 import { useTeams } from '../../../hooks/useTeams';
 import { useEmployees } from '../../../hooks/useEmployees';
 import { useAuth } from '../../../context/AuthContext.ts';
+import type {Team, TeamMember} from "../../../types";
 
 export const useTeamForm = () => {
     const { user, token } = useAuth();
@@ -70,10 +71,10 @@ export const useTeamForm = () => {
         setOpenDialog(true);
     };
 
-    const handleEdit = (team: any) => {
+    const handleEdit = (team: Team) => {
         setEditMode(true);
         setFormData(team);
-        setSelectedMembers(team.members?.map((m: any) => m.id) || []);
+        setSelectedMembers(team.members?.map((m: TeamMember) => m.id) || []);
         setOpenDialog(true);
     };
 

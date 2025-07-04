@@ -13,7 +13,7 @@ type EmployeesResponse = {
     };
 };
 
-export function useEmployees(page: number=1 ,limit:number=10, filters?: { search?: string; role?: string }) {
+export function useEmployees(page: number=1 ,limit:number=5, filters?: { search?: string; role?: string }) {
     const [employees, setEmployees] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [total, setTotal] = useState<number>(0);

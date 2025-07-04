@@ -78,7 +78,7 @@ export interface OrgApiResponse {
 export interface Team{
     id: string;
     name: string;
-    description?: string;
+    description: string;
     team_lead_id: string;
     is_active: boolean;
     team_lead_name: string;
