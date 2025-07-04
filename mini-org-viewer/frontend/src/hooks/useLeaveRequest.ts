@@ -3,7 +3,7 @@ import { api } from '../utils/api';
 import type { Leave,LeaveFilter } from '../types';
 import { useAuth } from '../context/AuthContext.ts';
 
-export function useLeaveRequest(forBalance = false, filters: LeaveFilter = {}) {
+export function useLeaveRequest(filters: LeaveFilter = {}) {
     const { user, token } = useAuth();
     const [requests, setRequests] = useState<Leave[]>([]);
     const [loading, setLoading] = useState(true);
@@ -14,7 +14,6 @@ export function useLeaveRequest(forBalance = false, filters: LeaveFilter = {}) {
 
         const query: string[] = [];
 
-        if (forBalance) query.push(`user_id=${(user.id)}`);
         if (filters.status && filters.status !== 'ALL') query.push(`status=${(filters.status)}`);
         if (filters.leave_type && filters.leave_type !== 'ALL') query.push(`leave_type=${(filters.leave_type)}`);
         if (filters.start_date) query.push(`start_date=${(filters.start_date)}`);

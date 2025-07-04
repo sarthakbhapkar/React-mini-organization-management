@@ -23,7 +23,7 @@ export const useLeaveManagement = () => {
         ...(user?.role === 'MEMBER' ? { user_id: user.id } : {})
     };
 
-    const {requests, loading, reFetch} = useLeaveRequest(false, filters);
+    const {requests, loading, reFetch} = useLeaveRequest(filters);
 
     const handleApprove = async (id: string) => {
         await api.put(`/api/leave/requests/${id}/approve`, {}, token);

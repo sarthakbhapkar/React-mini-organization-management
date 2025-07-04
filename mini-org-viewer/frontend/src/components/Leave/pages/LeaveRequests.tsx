@@ -14,7 +14,7 @@ const LeaveRequests: React.FC = () => {
     const [selectedType, setSelectedType] = useState('ALL');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const { requests, loading } = useLeaveRequest(false, {
+    const { requests, loading } = useLeaveRequest({
         status: selectedStatus,
         leave_type: selectedType,
         start_date: startDate,

@@ -6,7 +6,7 @@ import { calculateUsedLeaves } from '../utils/LeaveUtils';
 export const useLeaveBalance = () => {
     const { user } = useAuth();
     const { policy, loading: loadingPolicy } = useLeavePolicy();
-    const { requests, loading: loadingRequests } = useLeaveRequest(false, {
+    const { requests, loading: loadingRequests } = useLeaveRequest({
         user_id: user?.id
     });
 

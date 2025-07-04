@@ -15,7 +15,7 @@ const leaveTypeToPolicyKey = {
 
 export const useLeaveForm = () => {
     const {user, token} = useAuth();
-    const {requests} = useLeaveRequest(true);
+    const {requests} = useLeaveRequest({user_id:user?.id});
     const {policy} = useLeavePolicy();
     const navigate = useNavigate();
 
@@ -114,7 +114,7 @@ export const useLeaveForm = () => {
             setOpenSnackbar(true);
             setLeave({type: 'SICK', startDate: '', endDate: '', reason: ''});
             setError(null);
-            navigate('/leave/leave-requests');
+            navigate('/leave/requests');
         } catch (err: unknown) {
             console.error('Leave request failed:', err);
         }
