@@ -5,14 +5,22 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
+    Drawer,
+    IconButton,
+    Box,
 } from '@mui/material';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DataExplorationIcon from '@mui/icons-material/DataExploration';
 import PersonIcon from '@mui/icons-material/Person';
 import GroupsIcon from '@mui/icons-material/Groups';
+import CloseIcon from '@mui/icons-material/Close';
+import { useMediaQuery, useTheme } from '@mui/material';
 
-export const Sidebar = ({ role }: { role: 'MEMBER' | 'TEAM_LEAD' | 'ADMIN' }) => {
+export const Sidebar = ({ role, open, onToggle }: { role: 'MEMBER' | 'TEAM_LEAD' | 'ADMIN'; open: boolean; onToggle: () => void }) => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     const navItemStyles = {
         color: 'white',
         textTransform: 'none',
@@ -25,8 +33,8 @@ export const Sidebar = ({ role }: { role: 'MEMBER' | 'TEAM_LEAD' | 'ADMIN' }) =>
         },
     };
 
-    return (
-        <List sx={{ width: {xs:160,sm:240}, backgroundColor: '#263238', minHeight: '170vh', color: 'white', position: 'fixed', zIndex: 1200}}>
+    const sidebarContent = (
+        <List sx={{ width: { xs: 160, sm: 240 }, backgroundColor: '#263238', color: 'white', minHeight: { xs: '100vh', sm: '170vh' } }}>
             {role !== 'ADMIN' && (
                 <ListItem disablePadding>
                     <ListItemButton component={NavLink} to="/team-members" sx={navItemStyles}>
@@ -87,5 +95,34 @@ export const Sidebar = ({ role }: { role: 'MEMBER' | 'TEAM_LEAD' | 'ADMIN' }) =>
                 </>
             )}
         </List>
+    );
+
+    return (
+        <>
+            {isMobile ? (
+                <Drawer
+                    anchor="left"
+                    open={open}
+                    onClose={onToggle}
+                    sx={{
+                        '& .MuiDrawer-paper': {
+                            width: 160,
+                            backgroundColor: '#263238',
+                        },
+                    }}
+                >
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
+                        <IconButton onClick={onToggle} sx={{ color: 'white' }}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                    {sidebarContent}
+                </Drawer>
+            ) : (
+                <Box sx={{ position: 'fixed', zIndex: 1200 }}>
+                    {sidebarContent}
+                </Box>
+            )}
+        </>
     );
 };

@@ -58,17 +58,22 @@ const LeaveManagement2: React.FC = () => {
             label: 'Actions',
             key: 'status',
             align: 'center',
-            render: (leave: Leave) =>
-                leave.status === 'PENDING' && (
-                    <>
-                        <Button color="primary" size="small" onClick={() => handleApprove(leave.id)}>
-                            Approve
-                        </Button>
-                        <Button color="secondary" size="small" onClick={() => handleReject(leave.id)}>
-                            Reject
-                        </Button>
-                    </>
-                )
+            render: (leave: Leave) => {
+                if (leave.status === 'PENDING') {
+                    return (
+                        <>
+                            <Button color="primary" size="small" onClick={() => handleApprove(leave.id)}>
+                                Approve
+                            </Button>
+                            <Button color="secondary" size="small" onClick={() => handleReject(leave.id)}>
+                                Reject
+                            </Button>
+                        </>
+                    );
+                } else {
+                    return '—';
+                }
+            }
         }] : [])
     ] as Column<Leave>[];
 

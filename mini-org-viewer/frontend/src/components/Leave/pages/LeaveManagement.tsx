@@ -1,23 +1,25 @@
 import React from 'react';
-import {Box, Typography} from '@mui/material';
-import {useAuth} from '../../../context/AuthContext';
-import LeaveNavbar from "./LeaveNavBar.tsx";
+import { Box, Typography } from '@mui/material';
+import { useAuth } from '../../../context/AuthContext';
+import LeaveNavbar from './LeaveNavBar.tsx';
 
 const LeaveManagement: React.FC = () => {
-    const {user} = useAuth();
+    const { user } = useAuth();
 
     if (!user) return null;
 
     return (
-        <Box sx={{height: '100%', width: '100%', marginLeft: {xs: '160px', sm: '240px'}}}>
-            <LeaveNavbar/>
-            <Box sx={{
-                minHeight: '80vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}>
-                <Typography variant="h4" sx={{mr: 4}}>
+        <Box sx={{ width: '100%'}}>
+            <LeaveNavbar />
+            <Box
+                sx={{
+                    minHeight: { xs: '70vh', sm: '80vh' },
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <Typography variant="h4" sx={{ mr: { xs: 2, sm: 4 } }}>
                     Leave Management
                 </Typography>
             </Box>
